@@ -19,15 +19,18 @@ public class StudentFactoryTest {
     private final float validCpValue = 1;
     private final float invalidCrValue = -1;
     private final float invalidCpValue = -1;
+    private final boolean withReservation = true;
+    private final boolean noReservation = false;
 
     @Test
     public void shouldCreateMorningShiftStudent(){
         assertDoesNotThrow(() -> {
-            var student = StudentFactory.MorningShiftStudent(name, ra, validCrValue, validCpValue);
+            var student = StudentFactory.MorningShiftStudent(name, ra, validCrValue, validCpValue, withReservation);
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
             assertEquals(validCpValue, student.cp().value());
             assertEquals(validCrValue, student.cr().value());
+            assertEquals(withReservation, student.reservation());
             assertEquals(Shift.MORNING, student.shift());
         });
     }
@@ -35,11 +38,12 @@ public class StudentFactoryTest {
     @Test
     public void shouldCreateNightShiftStudent(){
         assertDoesNotThrow(() -> {
-            var student = StudentFactory.NightShiftStudent(name, ra, validCrValue, validCpValue);
+            var student = StudentFactory.NightShiftStudent(name, ra, validCrValue, validCpValue, noReservation);
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
             assertEquals(validCpValue, student.cp().value());
             assertEquals(validCrValue, student.cr().value());
+            assertEquals(noReservation, student.reservation());
             assertEquals(Shift.NIGHT, student.shift());
         });
     }
@@ -47,22 +51,30 @@ public class StudentFactoryTest {
     @Test
     public void shouldntCreateMorningShiftStudent(){
         assertThrows(InvalidStudentException.class, () -> {
-            StudentFactory.NightShiftStudent(name, ra, invalidCrValue, validCpValue);
+            StudentFactory.NightShiftStudent(name, ra, invalidCrValue, validCpValue, withReservation);
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            StudentFactory.NightShiftStudent(name, ra, validCrValue, invalidCpValue);
+            StudentFactory.NightShiftStudent(name, ra, validCrValue, invalidCpValue, withReservation);
+        });
+
+        assertThrows(InvalidStudentException.class, () -> {
+            StudentFactory.NightShiftStudent(name, ra, invalidCrValue, invalidCpValue, withReservation);
         });
     }
 
     @Test
     public void shouldntCreateNightShiftStudent(){
         assertThrows(InvalidStudentException.class,() -> {
-            StudentFactory.NightShiftStudent(name, ra, invalidCrValue, validCpValue);
+            StudentFactory.NightShiftStudent(name, ra, invalidCrValue, validCpValue, noReservation);
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            StudentFactory.NightShiftStudent(name, ra, validCrValue, invalidCpValue);
+            StudentFactory.NightShiftStudent(name, ra, validCrValue, invalidCpValue, noReservation);
+        });
+
+        assertThrows(InvalidStudentException.class, () -> {
+            StudentFactory.NightShiftStudent(name, ra, invalidCrValue, invalidCpValue, noReservation);
         });
     }
 }

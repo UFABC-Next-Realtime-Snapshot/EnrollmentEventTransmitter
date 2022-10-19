@@ -22,11 +22,13 @@ public class StudentTest {
     private final float validCpValue = 1;
     private final float invalidCrValue = -1;
     private final float invalidCpValue = -1;
+    private final boolean withReservation = true;
+    private final boolean noReservation = false;
 
     @Test
     public void shouldCreateStudentWithRawValues() {
         assertDoesNotThrow(() -> {
-            var student = new Student(name, ra, validCrValue, validCpValue, Shift.MORNING);
+            var student = new Student(name, ra, validCrValue, validCpValue, withReservation, Shift.MORNING);
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
             assertEquals(validCpValue, student.cp().value());
@@ -38,11 +40,15 @@ public class StudentTest {
     @Test
     public void shouldntCreateStudentWithRawValues() {
         assertThrows(InvalidStudentException.class, () -> {
-            new Student(name, ra, invalidCrValue, validCpValue, Shift.MORNING);
+            new Student(name, ra, invalidCrValue, validCpValue, withReservation, Shift.MORNING);
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            new Student(name, ra, validCrValue, invalidCpValue, Shift.MORNING);
+            new Student(name, ra, validCrValue, invalidCpValue, withReservation, Shift.MORNING);
+        });
+
+        assertThrows(InvalidStudentException.class, () -> {
+            new Student(name, ra, invalidCrValue, invalidCpValue, withReservation, Shift.MORNING);
         });
     }
 
@@ -50,11 +56,12 @@ public class StudentTest {
     public void shouldCreateStudent() {
         assertDoesNotThrow(() -> {
             var student = new Student(name, new Ra(ra), new Cr(validCrValue), new Cp(validCpValue),
-                    Shift.NIGHT);
+                    noReservation, Shift.NIGHT);
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
             assertEquals(validCpValue, student.cp().value());
             assertEquals(validCrValue, student.cr().value());
+            assertEquals(noReservation, student.reservation());
             assertEquals(Shift.NIGHT, student.shift());
         });
     }
