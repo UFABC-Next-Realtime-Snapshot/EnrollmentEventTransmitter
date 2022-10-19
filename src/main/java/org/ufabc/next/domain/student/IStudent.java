@@ -1,4 +1,4 @@
-package org.ufabc.next.domain.student;
+package org.ufabc.next.domain.Student;
 
 import org.ufabc.next.domain.commons.valueObjects.Cp;
 import org.ufabc.next.domain.commons.valueObjects.Cr;
@@ -10,5 +10,6 @@ public interface IStudent {
     Ra ra();
     Cr cr();
     Cp cp();
+    boolean reservation();
     Shift shift();
 }

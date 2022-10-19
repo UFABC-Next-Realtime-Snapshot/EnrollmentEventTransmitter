@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.ufabc.next.domain.Student.InvalidStudentException;
+import org.ufabc.next.domain.Student.Student;
 import org.ufabc.next.domain.commons.valueObjects.Cp;
 import org.ufabc.next.domain.commons.valueObjects.Cr;
 import org.ufabc.next.domain.commons.valueObjects.Ra;
@@ -35,11 +37,11 @@ public class StudentTest {
 
     @Test
     public void shouldntCreateStudentWithRawValues() {
-        assertThrows(InvalidStudent.class, () -> {
+        assertThrows(InvalidStudentException.class, () -> {
             new Student(name, ra, invalidCrValue, validCpValue, Shift.MORNING);
         });
 
-        assertThrows(InvalidStudent.class, () -> {
+        assertThrows(InvalidStudentException.class, () -> {
             new Student(name, ra, validCrValue, invalidCpValue, Shift.MORNING);
         });
     }

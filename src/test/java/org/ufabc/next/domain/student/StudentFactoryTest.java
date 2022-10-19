@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.ufabc.next.domain.Student.InvalidStudentException;
+import org.ufabc.next.domain.Student.StudentFactory;
 import org.ufabc.next.domain.commons.valueObjects.Shift;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -17,7 +19,7 @@ public class StudentFactoryTest {
     private final float validCpValue = 1;
     private final float invalidCrValue = -1;
     private final float invalidCpValue = -1;
-    
+
     @Test
     public void shouldCreateMorningShiftStudent(){
         assertDoesNotThrow(() -> {
@@ -44,22 +46,22 @@ public class StudentFactoryTest {
 
     @Test
     public void shouldntCreateMorningShiftStudent(){
-        assertThrows(InvalidStudent.class, () -> {
+        assertThrows(InvalidStudentException.class, () -> {
             StudentFactory.NightShiftStudent(name, ra, invalidCrValue, validCpValue);
         });
 
-        assertThrows(InvalidStudent.class, () -> {
+        assertThrows(InvalidStudentException.class, () -> {
             StudentFactory.NightShiftStudent(name, ra, validCrValue, invalidCpValue);
         });
     }
 
     @Test
     public void shouldntCreateNightShiftStudent(){
-        assertThrows(InvalidStudent.class,() -> {
+        assertThrows(InvalidStudentException.class,() -> {
             StudentFactory.NightShiftStudent(name, ra, invalidCrValue, validCpValue);
         });
 
-        assertThrows(InvalidStudent.class, () -> {
+        assertThrows(InvalidStudentException.class, () -> {
             StudentFactory.NightShiftStudent(name, ra, validCrValue, invalidCpValue);
         });
     }
