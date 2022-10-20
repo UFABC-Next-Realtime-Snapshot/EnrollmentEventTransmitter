@@ -1,4 +1,4 @@
-package org.ufabc.next.domain.Student;
+package org.ufabc.next.domain.student;
 
 import org.ufabc.next.domain.commons.valueObjects.Cp;
 import org.ufabc.next.domain.commons.valueObjects.Cr;

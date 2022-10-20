@@ -1,4 +1,4 @@
-package org.ufabc.next.domain.Student;
+package org.ufabc.next.domain.student;
 
 public class InvalidStudentException extends Exception{
     public InvalidStudentException(String message){
