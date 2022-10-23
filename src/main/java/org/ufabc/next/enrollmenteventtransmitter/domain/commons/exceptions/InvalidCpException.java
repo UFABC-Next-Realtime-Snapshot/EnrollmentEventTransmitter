@@ -1,4 +1,4 @@
-package org.ufabc.next.domain.commons.exceptions;
+package org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions;
 
 public class InvalidCpException extends Exception{
     public InvalidCpException(String message){

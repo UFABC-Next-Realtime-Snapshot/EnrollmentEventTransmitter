@@ -1,11 +1,11 @@
-package org.ufabc.next.domain.student;
+package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
-import org.ufabc.next.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 
 import io.quarkus.test.junit.QuarkusTest;
 

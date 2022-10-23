@@ -1,8 +1,8 @@
-package org.ufabc.next.domain.student;
+package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
 import java.util.Optional;
 
-import org.ufabc.next.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 
 public class StudentBuilder {
 

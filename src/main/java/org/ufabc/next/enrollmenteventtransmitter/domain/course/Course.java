@@ -1,8 +1,8 @@
-package org.ufabc.next.domain.Course;
+package org.ufabc.next.enrollmenteventtransmitter.domain.course;
 
-import org.ufabc.next.domain.commons.valueObjects.Cp;
-import org.ufabc.next.domain.commons.valueObjects.Cr;
-import org.ufabc.next.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 
 public class Course implements ICourse {
     private final String code;
