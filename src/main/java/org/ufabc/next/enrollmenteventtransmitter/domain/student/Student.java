@@ -15,16 +15,6 @@ public class Student implements IStudent{
     private final boolean reservation;
     private final Shift shift;
 
-    public Student(String name, Ra ra, Cr cr, Cp cp, boolean reservation, Shift shift){
-        this.name = name;
-        this.ra = ra;
-        // TODO what if CR/CP is null?
-        this.cr = cr;
-        this.cp = cp;
-        this.reservation = reservation;
-        this.shift = shift;
-    }
-
     public Student(String name, String ra, float cr, float cp, boolean reservation, Shift shift) throws InvalidStudentException{
         try{
             this.name = name;

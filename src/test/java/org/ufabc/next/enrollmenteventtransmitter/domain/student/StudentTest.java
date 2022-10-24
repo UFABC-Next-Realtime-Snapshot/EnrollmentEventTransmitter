@@ -2,12 +2,11 @@ package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Ra;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -24,7 +23,7 @@ public class StudentTest {
     private final boolean noReservation = false;
 
     @Test
-    public void shouldCreateStudentWithRawValues() {
+    public void shouldCreateStudent() {
         assertDoesNotThrow(() -> {
             var student = new Student(name, ra, validCrValue, validCpValue, withReservation, Shift.MORNING);
             assertEquals(name, student.name());
@@ -32,11 +31,22 @@ public class StudentTest {
             assertEquals(validCpValue, student.cp().value());
             assertEquals(validCrValue, student.cr().value());
             assertEquals(Shift.MORNING, student.shift());
+            assertTrue(student.reservation());
+        });
+
+        assertDoesNotThrow(() -> {
+            var student = new Student(name, ra, validCrValue, validCpValue, noReservation, Shift.MORNING);
+            assertEquals(name, student.name());
+            assertEquals(ra, student.ra().value());
+            assertEquals(validCpValue, student.cp().value());
+            assertEquals(validCrValue, student.cr().value());
+            assertEquals(Shift.MORNING, student.shift());
+            assertFalse(student.reservation());
         });
     }
 
     @Test
-    public void shouldntCreateStudentWithRawValues() {
+    public void shouldntCreateStudent() {
         assertThrows(InvalidStudentException.class, () -> {
             new Student(name, ra, invalidCrValue, validCpValue, withReservation, Shift.MORNING);
         });
@@ -47,20 +57,6 @@ public class StudentTest {
 
         assertThrows(InvalidStudentException.class, () -> {
             new Student(name, ra, invalidCrValue, invalidCpValue, withReservation, Shift.MORNING);
-        });
-    }
-
-    @Test
-    public void shouldCreateStudent() {
-        assertDoesNotThrow(() -> {
-            var student = new Student(name, new Ra(ra), new Cr(validCrValue), new Cp(validCpValue),
-                    noReservation, Shift.NIGHT);
-            assertEquals(name, student.name());
-            assertEquals(ra, student.ra().value());
-            assertEquals(validCpValue, student.cp().value());
-            assertEquals(validCrValue, student.cr().value());
-            assertEquals(noReservation, student.reservation());
-            assertEquals(Shift.NIGHT, student.shift());
         });
     }
 }
