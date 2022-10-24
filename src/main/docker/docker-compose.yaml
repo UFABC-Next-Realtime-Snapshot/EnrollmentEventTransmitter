@@ -1,0 +1,15 @@
+version: '3'
+services:
+  enrollment_event_transmitter:
+    build:
+      context: ../../..
+      dockerfile: ./src/main/docker/Dockerfile
+    image: enrollment-event-transmitter/app
+    ports:
+      - '7711:7711'
+    networks:
+      - quarkus-app
+
+networks:
+  quarkus-app:
+    driver: bridge
