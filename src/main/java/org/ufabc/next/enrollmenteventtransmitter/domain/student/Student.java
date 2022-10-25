@@ -2,6 +2,7 @@ package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.InvalidCpException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.InvalidCrException;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Ra;
@@ -12,16 +13,16 @@ public class Student implements IStudent{
     private final Ra ra;
     private final Cr cr;
     private final Cp cp;
-    private final boolean reservation;
+    private final Course course;
     private final Shift shift;
 
-    public Student(String name, String ra, float cr, float cp, boolean reservation, Shift shift) throws InvalidStudentException{
+    public Student(String name, String ra, float cr, float cp, Course course, Shift shift) throws InvalidStudentException{
         try{
             this.name = name;
             this.ra = new Ra(ra);
             this.cr = new Cr(cr);
             this.cp = new Cp(cp);
-            this.reservation = reservation;
+            this.course = course;
             this.shift = shift;
         } catch(InvalidCpException | InvalidCrException e){
             throw new InvalidStudentException(e.getMessage());
@@ -49,13 +50,18 @@ public class Student implements IStudent{
     }
 
     @Override
-    public boolean reservation() {
-        return this.reservation;
+    public boolean reservation(Course course) {
+        return this.course.equals(course);
     }
 
     @Override
     public Shift shift() {
         return this.shift;
+    }
+
+    @Override
+    public Course course(){
+        return this.course;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
-import java.util.Optional;
-
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Course;
 
 public class StudentBuilder {
 
@@ -11,7 +10,7 @@ public class StudentBuilder {
     private Shift shift;
     private float cr = 0;
     private float cp = 0;
-    private Boolean reservation;
+    private Course course;
 
     public StudentBuilder(String name, String ra, Shift shift){
         this.name = name;
@@ -19,8 +18,8 @@ public class StudentBuilder {
         this.shift = shift;
     }
 
-    public StudentBuilder WithReservation(){
-        this.reservation = true;
+    public StudentBuilder WithCourse(Course course){
+        this.course = course;
         return this;
     }
 
@@ -35,6 +34,6 @@ public class StudentBuilder {
     }
 
     public IStudent build() throws InvalidStudentException{
-        return new Student(name, ra, cr, cp, Optional.ofNullable(reservation).orElse(false), shift);
+        return new Student(name, ra, cr, cp, course, shift);
     }
 }

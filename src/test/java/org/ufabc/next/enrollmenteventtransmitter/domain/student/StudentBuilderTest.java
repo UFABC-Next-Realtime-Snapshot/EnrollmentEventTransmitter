@@ -17,8 +17,6 @@ public class StudentBuilderTest {
     private final float validCpValue = 1;
     private final float invalidCrValue = -1;
     private final float invalidCpValue = -1;
-    private final boolean withReservation = true;
-    private final boolean noReservation = false;
 
     @Test
     public void shouldCreateStudent() {
@@ -29,19 +27,17 @@ public class StudentBuilderTest {
             assertEquals(ra, student.ra().value());
             assertEquals(validCpValue, student.cp().value());
             assertEquals(validCrValue, student.cr().value());
-            assertEquals(noReservation, student.reservation());
             assertEquals(Shift.NIGHT, student.shift());
         });
 
        
         assertDoesNotThrow(() -> {
             var builder = new StudentBuilder(name, ra, Shift.MORNING);
-            var student = builder.WithReservation().build();
+            var student = builder.build();
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
             assertEquals(0, student.cp().value());
             assertEquals(0, student.cr().value());
-            assertEquals(withReservation, student.reservation());
             assertEquals(Shift.MORNING, student.shift());
         });
     }
