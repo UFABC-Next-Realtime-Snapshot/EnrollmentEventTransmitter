@@ -1,4 +1,4 @@
-package org.ufabc.next.enrollmenteventtransmitter.domain.course;
+package org.ufabc.next.enrollmenteventtransmitter.domain.discipline;
 
 public class Professor implements IProfessor {
     private final String name;
