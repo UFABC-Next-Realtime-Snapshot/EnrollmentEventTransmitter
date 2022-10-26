@@ -1,16 +1,11 @@
 package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 
-import io.quarkus.test.junit.QuarkusTest;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 public class StudentTest {
@@ -45,17 +40,58 @@ public class StudentTest {
     }
 
     @Test
-    public void shouldntCreateStudent() {
-        assertThrows(InvalidStudentException.class, () -> {
-            new Student(name, ra, invalidCrValue, validCpValue, Course.BCT, Shift.MORNING);
-        });
+    public void whenCreateStudentWithNegativeCrMustThrowInvalidStudentException() {
+        Exception exception = assertThrows(InvalidStudentException.class,
+                () -> new Student(name, ra, invalidCrValue, validCpValue, Course.BCT, Shift.MORNING));
 
-        assertThrows(InvalidStudentException.class, () -> {
-            new Student(name, ra, validCrValue, invalidCpValue, Course.BCT, Shift.MORNING);
-        });
+        String expectedMessage = "CR: negative value";
+        String actualMessage = exception.getMessage();
 
-        assertThrows(InvalidStudentException.class, () -> {
-            new Student(name, ra, invalidCrValue, invalidCpValue, Course.BCT, Shift.MORNING);
-        });
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void whenCreateStudentWithCrGreaterFourMustThrowInvalidStudentException() {
+        Exception exception = assertThrows(InvalidStudentException.class,
+                () -> new Student(name, ra, 5, validCpValue, Course.BCT, Shift.MORNING));
+
+        String expectedMessage = "CR: value greater than 4";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void whenCreateStudentWithNegativeCpMustThrowInvalidStudentException() {
+        Exception exception = assertThrows(InvalidStudentException.class,
+                () -> new Student(name, ra, validCrValue, invalidCpValue, Course.BCT, Shift.MORNING));
+
+        String expectedMessage = "cp: invalid value, must be greater 0";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void whenCreateStudentWithCpGreaterOneMustThrowInvalidStudentException() {
+        Exception exception = assertThrows(InvalidStudentException.class,
+                () -> new Student(name, ra, validCrValue, 7, Course.BCT, Shift.MORNING));
+
+        String expectedMessage = "cp: invalid value, must be lower 1";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
+    @Test
+    public void whenCreateStudentWithInvalidCrAndInvalidCpMustThrowInvalidStudentException() {
+        Exception exception = assertThrows(InvalidStudentException.class,
+                () -> new Student(name, ra, invalidCrValue, invalidCpValue, Course.BCT, Shift.MORNING));
+
+        String expectedMessage = "CR: negative value";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }

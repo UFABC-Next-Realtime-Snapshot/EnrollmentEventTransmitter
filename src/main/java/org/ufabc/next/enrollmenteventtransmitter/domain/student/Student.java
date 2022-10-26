@@ -2,13 +2,9 @@ package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.InvalidCpException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.InvalidCrException;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Course;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Ra;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.*;
 
-public class Student implements IStudent{
+public class Student implements IStudent {
     private final String name;
     private final Ra ra;
     private final Cr cr;
@@ -16,15 +12,16 @@ public class Student implements IStudent{
     private final Course course;
     private final Shift shift;
 
-    public Student(String name, String ra, float cr, float cp, Course course, Shift shift) throws InvalidStudentException{
-        try{
+    public Student(String name, String ra, float cr, float cp, Course course, Shift shift)
+            throws InvalidStudentException {
+        try {
             this.name = name;
             this.ra = new Ra(ra);
             this.cr = new Cr(cr);
             this.cp = new Cp(cp);
             this.course = course;
             this.shift = shift;
-        } catch(InvalidCpException | InvalidCrException e){
+        } catch (InvalidCpException | InvalidCrException e) {
             throw new InvalidStudentException(e.getMessage());
         }
     }
@@ -60,19 +57,19 @@ public class Student implements IStudent{
     }
 
     @Override
-    public Course course(){
+    public Course course() {
         return this.course;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.ra.value().hashCode();
     }
 
     @Override
-    public boolean equals(Object object){
-        if(object.getClass() == Student.class){
-            return this.hashCode() == ((Student) object).hashCode();
+    public boolean equals(Object object) {
+        if (object.getClass() == Student.class) {
+            return this.hashCode() == object.hashCode();
         }
         return false;
     }
