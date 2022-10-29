@@ -7,6 +7,22 @@ services:
     image: enrollment-event-transmitter/app
     ports:
       - '7711:7711'
+    links:
+      - database
+    networks:
+      - quarkus-app
+
+  database:
+    container_name: enrollment-event-transmitter-postgres
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=enrollment_event_transmitter
+      - POSTGRES_USER=root
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker/volume_postgres:/var/lib/postgres
     networks:
       - quarkus-app
 

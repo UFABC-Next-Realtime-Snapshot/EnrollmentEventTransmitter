@@ -1,0 +1,43 @@
+"%prod":
+  quarkus:
+    http:
+      port: 7711
+    liquibase:
+      migrate-at-start: true
+      change-log: database/changeLog.yaml
+    datasource:
+      db-kind: postgresql
+      username: root
+      password: root
+      jdbc:
+        url: jdbc:postgresql://database:5432/enrollment_event_transmitter
+
+"%dev":
+  quarkus:
+    http:
+      port: 7711
+      access-log:
+        enabled: true
+    liquibase:
+      migrate-at-start: true
+      change-log: database/changeLog.yaml
+    datasource:
+      db-kind: postgresql
+      username: root
+      password: root
+      jdbc:
+        url: jdbc:postgresql://localhost:5432/enrollment_event_transmitter
+
+"%test":
+  quarkus:
+    http:
+      port: 9090
+      access-log:
+        enabled: true
+    liquibase:
+      migrate-at-start: true
+      change-log: database/changeLog.yaml
+    datasource:
+      db-kind: h2
+      jdbc:
+        url: jdbc:h2:mem:enrollment_event_transmitter
