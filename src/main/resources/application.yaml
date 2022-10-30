@@ -40,4 +40,4 @@
     datasource:
       db-kind: h2
       jdbc:
-        url: jdbc:h2:mem:enrollment_event_transmitter
+        url: jdbc:h2:mem:enrollment_event_transmitter;MODE=PostgreSQL;DATABASE_TO_UPPER=FALSE
