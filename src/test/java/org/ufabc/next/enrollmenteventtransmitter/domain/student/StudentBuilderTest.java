@@ -22,7 +22,7 @@ public class StudentBuilderTest {
     public void shouldCreateStudent() {
         assertDoesNotThrow(() -> {
             var builder = new StudentBuilder(name, ra, Shift.NIGHT);
-            var student = builder.WithCr(validCrValue).WithCp(validCpValue).build();
+            var student = builder.withCr(validCrValue).withCp(validCpValue).build();
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
             assertEquals(validCpValue, student.cp().value());
@@ -45,15 +45,15 @@ public class StudentBuilderTest {
     @Test
     public void shouldntCreateStudent() {
         assertThrows(InvalidStudentException.class, () -> {
-            new StudentBuilder(name, ra, Shift.MORNING).WithCr(invalidCrValue).WithCp(validCpValue).build();
+            new StudentBuilder(name, ra, Shift.MORNING).withCr(invalidCrValue).withCp(validCpValue).build();
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            new StudentBuilder(name, ra, Shift.MORNING).WithCr(validCrValue).WithCp(invalidCpValue).build();
+            new StudentBuilder(name, ra, Shift.MORNING).withCr(validCrValue).withCp(invalidCpValue).build();
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            new StudentBuilder(name, ra, Shift.MORNING).WithCr(invalidCrValue).WithCp(invalidCpValue).build();
+            new StudentBuilder(name, ra, Shift.MORNING).withCr(invalidCrValue).withCp(invalidCpValue).build();
         });
     }
 }

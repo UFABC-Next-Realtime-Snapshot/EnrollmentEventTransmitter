@@ -2,6 +2,10 @@ package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Discipline;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentBuilder {
 
@@ -11,29 +15,36 @@ public class StudentBuilder {
     private float cr = 0;
     private float cp = 0;
     private Course course;
+    private List<Discipline> disciplines;
 
     public StudentBuilder(String name, String ra, Shift shift) {
         this.name = name;
         this.ra = ra;
         this.shift = shift;
+        this.disciplines = new ArrayList<>();
     }
 
-    public StudentBuilder WithCourse(Course course) {
+    public StudentBuilder withCourse(Course course) {
         this.course = course;
         return this;
     }
 
-    public StudentBuilder WithCr(float value) {
+    public StudentBuilder withCr(float value) {
         this.cr = value;
         return this;
     }
 
-    public StudentBuilder WithCp(float value) {
+    public StudentBuilder withCp(float value) {
         this.cp = value;
         return this;
     }
 
+    public StudentBuilder withDisciplines(List<Discipline> disciplines){
+        this.disciplines = disciplines;
+        return this;
+    }
+
     public IStudent build() throws InvalidStudentException {
-        return new Student(name, ra, cr, cp, course, shift);
+        return new Student(name, ra, cr, cp, course, shift, disciplines);
     }
 }

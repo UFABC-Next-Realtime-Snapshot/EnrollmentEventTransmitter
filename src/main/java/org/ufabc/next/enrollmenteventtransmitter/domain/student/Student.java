@@ -3,6 +3,9 @@ package org.ufabc.next.enrollmenteventtransmitter.domain.student;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.InvalidCpException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.InvalidCrException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.*;
+import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Discipline;
+
+import java.util.List;
 
 public class Student implements IStudent {
     private final String name;
@@ -11,9 +14,10 @@ public class Student implements IStudent {
     private final Cp cp;
     private final Course course;
     private final Shift shift;
+    private final List<Discipline> disciplines;
 
-    public Student(String name, String ra, float cr, float cp, Course course, Shift shift)
-            throws InvalidStudentException {
+    public Student(String name, String ra, float cr, float cp,
+                   Course course, Shift shift, List<Discipline> disciplines) {
         try {
             this.name = name;
             this.ra = new Ra(ra);
@@ -21,6 +25,7 @@ public class Student implements IStudent {
             this.cp = new Cp(cp);
             this.course = course;
             this.shift = shift;
+            this.disciplines = disciplines;
         } catch (InvalidCpException | InvalidCrException e) {
             throw new InvalidStudentException(e.getMessage());
         }
@@ -59,6 +64,11 @@ public class Student implements IStudent {
     @Override
     public Course course() {
         return this.course;
+    }
+
+    @Override
+    public List<Discipline> disciplines(){
+        return this.disciplines;
     }
 
     @Override
