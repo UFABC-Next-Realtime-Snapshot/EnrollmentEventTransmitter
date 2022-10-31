@@ -86,6 +86,7 @@ public class JdbcTemplate {
                 LOGGER.error("rollback finalize");
                 throw new JdbcException(exception.getMessage());
             }
+            conn.close();
         } catch (SQLException exception) {
             LOGGER.error("Error in connection", exception);
             throw new JdbcException(exception.getMessage());
