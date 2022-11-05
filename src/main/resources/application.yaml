@@ -34,7 +34,11 @@
       port: 9090
       access-log:
         enabled: true
+    hibernate-orm:
+      log:
+        sql: true
     liquibase:
+      context: test
       migrate-at-start: true
       change-log: database/changeLog.yaml
     datasource:

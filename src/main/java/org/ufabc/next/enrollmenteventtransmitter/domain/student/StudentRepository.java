@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface StudentRepository {
 
-    void create(IStudent student);
+    void add(IStudent student);
     void update(IStudent student);
     Optional<IStudent> findByRa(String ra);
 }

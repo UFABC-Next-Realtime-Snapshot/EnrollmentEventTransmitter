@@ -11,6 +11,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 public class StudentBuilderTest {
+    private final Long id = 1L;
     private final String name = "SomeName";
     private final String ra = "171626328";
     private final float validCrValue = 3;
@@ -21,7 +22,7 @@ public class StudentBuilderTest {
     @Test
     public void shouldCreateStudent() {
         assertDoesNotThrow(() -> {
-            var builder = new StudentBuilder(name, ra, Shift.NIGHT);
+            var builder = new StudentBuilder(id, name, ra, Shift.NIGHT);
             var student = builder.withCr(validCrValue).withCp(validCpValue).build();
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
@@ -32,7 +33,7 @@ public class StudentBuilderTest {
 
        
         assertDoesNotThrow(() -> {
-            var builder = new StudentBuilder(name, ra, Shift.MORNING);
+            var builder = new StudentBuilder(id, name, ra, Shift.MORNING);
             var student = builder.build();
             assertEquals(name, student.name());
             assertEquals(ra, student.ra().value());
@@ -45,15 +46,15 @@ public class StudentBuilderTest {
     @Test
     public void shouldntCreateStudent() {
         assertThrows(InvalidStudentException.class, () -> {
-            new StudentBuilder(name, ra, Shift.MORNING).withCr(invalidCrValue).withCp(validCpValue).build();
+            new StudentBuilder(id, name, ra, Shift.MORNING).withCr(invalidCrValue).withCp(validCpValue).build();
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            new StudentBuilder(name, ra, Shift.MORNING).withCr(validCrValue).withCp(invalidCpValue).build();
+            new StudentBuilder(id, name, ra, Shift.MORNING).withCr(validCrValue).withCp(invalidCpValue).build();
         });
 
         assertThrows(InvalidStudentException.class, () -> {
-            new StudentBuilder(name, ra, Shift.MORNING).withCr(invalidCrValue).withCp(invalidCpValue).build();
+            new StudentBuilder(id, name, ra, Shift.MORNING).withCr(invalidCrValue).withCp(invalidCpValue).build();
         });
     }
 }

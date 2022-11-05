@@ -1,13 +1,14 @@
 package org.ufabc.next.enrollmenteventtransmitter.domain.discipline;
 
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 
 import static org.ufabc.next.enrollmenteventtransmitter.domain.commons.PreConditions.checkNotNull;
 
 public class Discipline implements IDiscipline {
+    private Long id;
     private String code;
     private String name;
     private Course course;
@@ -23,6 +24,11 @@ public class Discipline implements IDiscipline {
 
     public static Builder aDiscipline() {
         return new Builder();
+    }
+
+    @Override
+    public Long id() {
+        return this.id;
     }
 
     @Override
@@ -71,7 +77,7 @@ public class Discipline implements IDiscipline {
     }
 
     public static final class Builder {
-
+        private Long id;
         private String code;
         private String name;
         private Course course;
@@ -83,6 +89,11 @@ public class Discipline implements IDiscipline {
         private Cp thresholdCp;
 
         Builder() {
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder withCode(String code) {
@@ -132,6 +143,7 @@ public class Discipline implements IDiscipline {
 
         public Discipline build() {
             Discipline discipline = new Discipline();
+            discipline.id = checkNotNull(this.id, "id");
             discipline.code = checkNotNull(this.code, "code");
             discipline.name = checkNotNull(this.name, "name");
             discipline.course = checkNotNull(this.course, "course");
@@ -144,5 +156,15 @@ public class Discipline implements IDiscipline {
 
             return discipline;
         }
+    }
+
+    @Override
+    public void changeThresholdCr(Cr cr) {
+        this.thresholdCr = cr;
+    }
+
+    @Override
+    public void changeThresholdCp(Cp cp) {
+        this.thresholdCp = cp;
     }
 }
