@@ -17,13 +17,17 @@ public class CalculateCoefficientsOfDiscipline {
 
     public void execute(IDiscipline discipline){
         String query = "SELECT cr, cp FROM (SELECT \n"+
-        "withReservation(" + discipline.course().id() +", course_id) as withReservation, \n" +
-        "withSameShift(" + discipline.shift().initial() + ", shift) as withSameShift, \n" +
+        "CASE course_id" + 
+            "WHEN " + discipline.course().id() + "THEN 1" + 
+            "ELSE 0 END as withReservation, \n" +
+        "CASE shift" +
+            "WHEN " + discipline.shift().initial() + "THEN 1" +
+            "ELSE 0 END as withSameShift, \n" +
         "cr, cp \n" +
         "FROM students\n" +
         "WHERE id IN (SELECT student_id FROM enrollments WHERE discipline_id = " + discipline.id() + ")\n"+
         "ORDER BY withReservation, withSameShift, cr, cp DESC\n"+
-        "LIMIT ?\n)ranking" +
+        "LIMIT ?\n) ranking" +
         "LIMIT 1;"; 
 
         var coefficients = entityManager.createQuery(query, ArrayList.class).getSingleResult();

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
 
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.DisciplineRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.IDiscipline;

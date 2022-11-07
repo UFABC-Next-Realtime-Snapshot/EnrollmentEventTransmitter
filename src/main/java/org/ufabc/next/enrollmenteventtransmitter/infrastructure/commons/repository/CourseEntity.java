@@ -20,7 +20,6 @@ public class CourseEntity extends PanacheEntityBase {
 
     public static CourseEntity toEntity(Course course) {
         var courseEntity = new CourseEntity();
-        courseEntity.id = course.id();
         courseEntity.name = course.name();
         return courseEntity;
     }

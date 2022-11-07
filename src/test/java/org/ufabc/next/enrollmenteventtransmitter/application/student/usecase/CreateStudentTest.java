@@ -39,7 +39,7 @@ public class CreateStudentTest {
     }
 
     @Test
-    public void whenStudentExistsShouldReturnOutputCreateStudent(){
+    public void whenStudentNotExistsShouldReturnOutputCreateStudent(){
         when(studentRepository.findByRa("Some Ra")).thenReturn(Optional.empty());
         
         var input = new InputCreateStudent("Some name", "Some Ra", 0, 0, Shift.MORNING.initial());

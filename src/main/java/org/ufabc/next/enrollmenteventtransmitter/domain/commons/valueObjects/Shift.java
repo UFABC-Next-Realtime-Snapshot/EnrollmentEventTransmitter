@@ -15,7 +15,7 @@ public enum Shift {
         return initial;
     }
 
-    public static Shift fromInitial(char initial) {
+    public static Shift fromInitial(char initial){
         return Arrays.stream(Shift.values())
                 .filter(shift -> shift.initial == initial)
                 .findFirst()
