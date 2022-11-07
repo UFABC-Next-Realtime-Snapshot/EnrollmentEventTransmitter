@@ -1,4 +1,4 @@
-package org.ufabc.next.enrollmenteventtransmitter.application;
+package org.ufabc.next.enrollmenteventtransmitter.application.commands;
 
 import org.ufabc.next.enrollmenteventtransmitter.abstraction.ICommand;
 
