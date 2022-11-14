@@ -1,0 +1,11 @@
+version: '3'
+services:
+  database:
+    container_name: enrollment-event-transmitter-local-postgres
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=enrollment_event_transmitter
+      - POSTGRES_USER=root
+    ports:
+      - 5432:5432

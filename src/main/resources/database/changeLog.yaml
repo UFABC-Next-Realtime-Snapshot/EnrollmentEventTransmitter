@@ -2,3 +2,246 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: paixao.thales
+      changes:
+        - createTable:
+            tableName: students
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ra
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cr
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cp
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shift
+                  type: VARCHAR(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: course_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: ALTER TABLE students ADD CONSTRAINT student_check_cr CHECK (cr >= 0 AND cr <= 4)
+
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: ALTER TABLE students ADD CONSTRAINT student_check_cp CHECK (cp >= 0 AND cp <= 1)
+
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: ALTER TABLE students ADD CONSTRAINT student_check_shift CHECK (shift IN ('M', 'N'))
+
+        - createTable:
+            tableName: courses
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+
+        - addForeignKeyConstraint:
+            baseColumnNames: course_id
+            baseTableName: students
+            constraintName: fk_student_course
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: courses
+            validate: true
+
+        - createTable:
+            tableName: professors
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: disciplines
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cr
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cp
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shift
+                  type: VARCHAR(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vacancies
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: course_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: theory_professor_id
+                  type: bigint
+              - column:
+                  name: practice_professor_id
+                  type: bigint
+
+        - addForeignKeyConstraint:
+            baseColumnNames: course_id
+            baseTableName: disciplines
+            constraintName: fk_discipline_course
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: courses
+            validate: true
+
+        - addForeignKeyConstraint:
+            baseColumnNames: practice_professor_id
+            baseTableName: disciplines
+            constraintName: fk_discipline_practice_professor
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: professors
+            validate: true
+
+        - addForeignKeyConstraint:
+            baseColumnNames: theory_professor_id
+            baseTableName: disciplines
+            constraintName: fk_discipline_theory_professor
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: professors
+            validate: true
+
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: ALTER TABLE disciplines ADD CONSTRAINT disciplines_check_cr CHECK (cr >= 0 AND cr <= 4)
+
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: ALTER TABLE disciplines ADD CONSTRAINT disciplines_check_cp CHECK (cp >= 0 AND cp <= 1)
+
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: ALTER TABLE disciplines ADD CONSTRAINT disciplines_check_shift CHECK (shift IN ('M', 'N'))
+
+        - createTable:
+            tableName: enrollments
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: student_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: discipline_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: student_id
+            baseTableName: enrollments
+            constraintName: fk_enrollment_student
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: students
+            validate: true
+
+        - addForeignKeyConstraint:
+            baseColumnNames: discipline_id
+            baseTableName: enrollments
+            constraintName: fk_enrollment_discipline
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: disciplines
+            validate: true

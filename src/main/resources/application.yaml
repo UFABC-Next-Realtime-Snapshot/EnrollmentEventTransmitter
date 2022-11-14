@@ -34,10 +34,14 @@
       port: 9090
       access-log:
         enabled: true
+    hibernate-orm:
+      log:
+        sql: true
     liquibase:
+      context: test
       migrate-at-start: true
       change-log: database/changeLog.yaml
     datasource:
       db-kind: h2
       jdbc:
-        url: jdbc:h2:mem:enrollment_event_transmitter
+        url: jdbc:h2:mem:enrollment_event_transmitter;MODE=PostgreSQL;DATABASE_TO_UPPER=FALSE
