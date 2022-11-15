@@ -17,6 +17,7 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Discipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.DisciplineRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.IDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Professor;
+import org.ufabc.next.enrollmenteventtransmitter.domain.student.IStudent;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
@@ -87,6 +88,42 @@ public class EnrollStudentTest {
     }
 
     @Test
+    public void whenStudentNotExistsShouldReturnOutputEnrollStudent() {
+        var course = new Course(1L, "Some course");
+
+        var discipline = Discipline.aDiscipline()
+                .withId(1L)
+                .withName("Some discipline")
+                .withCode("Some code")
+                .withCourse(course)
+                .withCP(new Cp(0))
+                .withCR(new Cr(0))
+                .withShift(Shift.MORNING)
+                .withPracticeProfessor(new Professor("Some practice professor"))
+                .withTheoryProfessor(new Professor("Some theory professor"))
+                .withVacancies((short) 10)
+                .build();
+
+        when(courseRepository.findByName("Some course")).thenReturn(Optional.of(course));
+        when(studentRepository.findByRa("SomeRa...")).thenReturn(Optional.empty());
+        when(disciplineRepository.findByCode("Some code")).thenReturn(Optional.of(discipline));
+
+        var disciplineCodes = new ArrayList<String>();
+        disciplineCodes.add("Some code");
+        var input = new InputEnrollStudent(
+                "SomeRa...", "Some name", "Some course",
+                4F, 1F, Shift.MORNING.initial(), disciplineCodes);
+        enrollStudent.execute(input);
+
+        verify(studentRepository).findByRa("SomeRa...");
+        verify(studentRepository).add(any(IStudent.class));
+        verify(courseRepository).findByName("Some course");
+        verify(dispatcher).notify(new StudentRegisteredInDiscipline(discipline, any()));
+        verify(calculateCoefficientsOfDiscipline).execute(discipline);
+        verify(disciplineRepository).update(discipline);
+    }
+
+    @Test
     public void whenStudentExistsAndHasEnrollmentsShouldReturnOutputEnrollStudent() {
         var course = new Course(1L, "Other course");
         var discipline = Discipline.aDiscipline()
@@ -136,7 +173,6 @@ public class EnrollStudentTest {
 
         verify(courseRepository).findByName("Some course");
         verify(studentRepository).update(any());
-        verify(disciplineRepository).findByCode("Some code");
         verify(disciplineRepository).findByCode("Other code");
         verify(dispatcher).notify(isA(StudentRegisteredInDiscipline.class));
         verify(dispatcher).notify(isA(StudentRemovedFromDiscipline.class));
