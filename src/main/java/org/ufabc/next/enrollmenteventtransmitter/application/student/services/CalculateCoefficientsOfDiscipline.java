@@ -16,23 +16,37 @@ public class CalculateCoefficientsOfDiscipline {
     EntityManager entityManager;
 
     public void execute(IDiscipline discipline){
-        String query = "SELECT cr, cp FROM (SELECT \n"+
-        "CASE course_id" + 
-            "WHEN " + discipline.course().id() + "THEN 1" + 
-            "ELSE 0 END as withReservation, \n" +
-        "CASE shift" +
-            "WHEN " + discipline.shift().initial() + "THEN 1" +
-            "ELSE 0 END as withSameShift, \n" +
-        "cr, cp \n" +
-        "FROM students\n" +
-        "WHERE id IN (SELECT student_id FROM enrollments WHERE discipline_id = " + discipline.id() + ")\n"+
-        "ORDER BY withReservation, withSameShift, cr, cp DESC\n"+
-        "LIMIT ?\n) ranking" +
-        "LIMIT 1;"; 
+        if (!discipline.isFull()) {
+            return;
+        }
+        String query = "SELECT cr, cp FROM (SELECT " +
+                "(CASE course_id " +
+                "WHEN :courseId THEN 1 " +
+                "ELSE 0 END) AS withReservation, " +
+                "(CASE shift " +
+                "WHEN :disciplineShift THEN 1 " +
+                "ELSE 0 END) as withSameShift, " +
+                "cr, cp " +
+                "FROM students " +
+                "WHERE id IN (SELECT student_id FROM enrollments WHERE discipline_id = :disciplineId) " +
+                "ORDER BY withReservation, withSameShift, cr, cp DESC " +
+                "LIMIT :disciplineVacancies) ranking " +
+                "ORDER BY withReservation, withSameShift, cr, cp ASC " +
+                "LIMIT 1";
+        var statement = entityManager.createNativeQuery(query);
+        statement.setParameter("courseId", discipline.course().id());
+        statement.setParameter("disciplineShift", discipline.shift().initial());
+        statement.setParameter("disciplineId", discipline.id());
+        statement.setParameter("disciplineVacancies", discipline.vacancies());
 
-        var coefficients = entityManager.createQuery(query, ArrayList.class).getSingleResult();
-        var cr = new Cr((float) coefficients.get(0));
-        var cp = new Cp((float) coefficients.get(1));
+        var resultSet = statement.getResultList();
+        if (resultSet.isEmpty()) {
+            return;
+        }
+
+        var coefficients = (Object[]) resultSet.get(0);
+        var cr = new Cr((float) coefficients[0]);
+        var cp = new Cp((float) coefficients[1]);
         discipline.changeThresholdCr(cr);
         discipline.changeThresholdCp(cp);
     }

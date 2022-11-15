@@ -1,18 +1,6 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecase;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.ufabc.next.enrollmenteventtransmitter.application.commons.events.IEventDispatcher;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRegisteredInDiscipline;
@@ -24,6 +12,7 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
+import org.ufabc.next.enrollmenteventtransmitter.domain.course.CourseRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Discipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.DisciplineRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.IDiscipline;
@@ -31,31 +20,46 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Professor;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
-import io.quarkus.test.junit.QuarkusTest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class EnrollStudentTest {
     public IEventDispatcher dispatcher = mock(IEventDispatcher.class);
     public StudentRepository studentRepository = mock(StudentRepository.class);
     public DisciplineRepository disciplineRepository = mock(DisciplineRepository.class);
+    public CourseRepository courseRepository = mock(CourseRepository.class);
     public CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline = mock(
             CalculateCoefficientsOfDiscipline.class);
-    public EnrollStudent enrollStudent = new EnrollStudent(studentRepository, disciplineRepository,
-            calculateCoefficientsOfDiscipline, dispatcher);
+    public EnrollStudent enrollStudent = new EnrollStudent(
+            disciplineRepository,
+            studentRepository,
+            courseRepository,
+            calculateCoefficientsOfDiscipline,
+            dispatcher);
 
     @Test
     public void whenStudentExistsAndHasntEnrollmentsShouldReturnOutputEnrollStudent() {
-        var student = new StudentBuilder(1L, "Some course", "SomeRa...", Shift.MORNING)
-                .withCourse(new Course(1L, "Some course"))
+        var course = new Course(1L, "Some course");
+
+        var student = new StudentBuilder(1L, "Some name", "SomeRa...", Shift.MORNING)
+                .withCourse(course)
                 .withCp(1)
                 .withCr(4)
                 .withDisciplines(new ArrayList<>())
                 .build();
+
         var discipline = Discipline.aDiscipline()
-                .withId(1l)
+                .withId(1L)
                 .withName("Some discipline")
                 .withCode("Some code")
-                .withCourse(new Course(1L, "Some course"))
+                .withCourse(course)
                 .withCP(new Cp(0))
                 .withCR(new Cr(0))
                 .withShift(Shift.MORNING)
@@ -64,15 +68,19 @@ public class EnrollStudentTest {
                 .withVacancies((short) 10)
                 .build();
 
+        when(courseRepository.findByName("Some course")).thenReturn(Optional.of(course));
         when(studentRepository.findByRa("SomeRa...")).thenReturn(Optional.of(student));
-        when(disciplineRepository.findByCode("Some code")).thenReturn(discipline);
+        when(disciplineRepository.findByCode("Some code")).thenReturn(Optional.of(discipline));
 
         var disciplineCodes = new ArrayList<String>();
         disciplineCodes.add("Some code");
-        var input = new InputEnrollStudent("SomeRa...", disciplineCodes);
+        var input = new InputEnrollStudent(
+                "SomeRa...", "Some name", "Some course",
+                4F, 1F, Shift.MORNING.initial(), disciplineCodes);
         enrollStudent.execute(input);
-        
+
         verify(studentRepository).update(any());
+        verify(courseRepository).findByName("Some course");
         verify(dispatcher).notify(new StudentRegisteredInDiscipline(discipline, any()));
         verify(calculateCoefficientsOfDiscipline).execute(discipline);
         verify(disciplineRepository).update(discipline);
@@ -80,11 +88,12 @@ public class EnrollStudentTest {
 
     @Test
     public void whenStudentExistsAndHasEnrollmentsShouldReturnOutputEnrollStudent() {
+        var course = new Course(1L, "Other course");
         var discipline = Discipline.aDiscipline()
-                .withId(1l)
+                .withId(1L)
                 .withName("Some discipline")
                 .withCode("Some code")
-                .withCourse(new Course(1L, "Some course"))
+                .withCourse(course)
                 .withCP(new Cp(0))
                 .withCR(new Cr(0))
                 .withShift(Shift.MORNING)
@@ -94,18 +103,18 @@ public class EnrollStudentTest {
                 .build();
 
         List<IDiscipline> studentDisciplines = List.of(discipline);
-        var student = new StudentBuilder(1L, "Some course", "SomeRa...", Shift.MORNING)
-                .withCourse(new Course(1L, "Some course"))
+        var student = new StudentBuilder(1L, "Some name", "SomeRa...", Shift.MORNING)
+                .withCourse(course)
                 .withCp(1)
                 .withCr(4)
                 .withDisciplines(studentDisciplines)
                 .build();
 
         var otherDiscipline = Discipline.aDiscipline()
-                .withId(2l)
+                .withId(2L)
                 .withName("Other discipline")
                 .withCode("Other code")
-                .withCourse(new Course(1L, "Other course"))
+                .withCourse(course)
                 .withCP(new Cp(0))
                 .withCR(new Cr(0))
                 .withShift(Shift.MORNING)
@@ -114,15 +123,21 @@ public class EnrollStudentTest {
                 .withVacancies((short) 10)
                 .build();
 
+        when(courseRepository.findByName("Some course")).thenReturn(Optional.of(course));
         when(studentRepository.findByRa("SomeRa...")).thenReturn(Optional.of(student));
-        when(disciplineRepository.findByCode("Other code")).thenReturn(otherDiscipline);
+        when(disciplineRepository.findByCode("Other code")).thenReturn(Optional.of(otherDiscipline));
 
         var disciplineCodes = new ArrayList<String>();
         disciplineCodes.add("Other code");
-        var input = new InputEnrollStudent("SomeRa...", disciplineCodes);
+        var input = new InputEnrollStudent(
+                "SomeRa...", "Some name", "Some course", 4F, 1F,
+                Shift.MORNING.initial() , disciplineCodes);
         enrollStudent.execute(input);
 
+        verify(courseRepository).findByName("Some course");
         verify(studentRepository).update(any());
+        verify(disciplineRepository).findByCode("Some code");
+        verify(disciplineRepository).findByCode("Other code");
         verify(dispatcher).notify(isA(StudentRegisteredInDiscipline.class));
         verify(dispatcher).notify(isA(StudentRemovedFromDiscipline.class));
         verify(calculateCoefficientsOfDiscipline).execute(discipline);
@@ -132,14 +147,29 @@ public class EnrollStudentTest {
     }
 
     @Test
-    public void whenStudentNotExistsShouldThrowsRuntimeException(){
-        when(studentRepository.findByRa(anyString())).thenReturn(Optional.empty());
-        var input = new InputEnrollStudent("SomeRa...", new ArrayList<>());
-        
+    public void whenSomeDisciplineNotExistsShouldThrowsRuntimeException() {
+        when(courseRepository.findByName("Some Course")).thenReturn(Optional.of(new Course(1L, "Some Course")));
+        when(disciplineRepository.findByCode(anyString())).thenReturn(Optional.empty());
+        var input = new InputEnrollStudent("SomeRa...", "Some name", "Some course", 4F,
+                1F, Shift.MORNING.initial(), List.of("Some code"));
+
         Exception exception = assertThrows(RuntimeException.class, () -> {
             enrollStudent.execute(input);
         });
 
-        assertEquals("pega aqui", exception.getMessage());
+        assertEquals("discipline code: Some code not exists", exception.getMessage());
+    }
+
+    @Test
+    public void whenCourseNotExistsShouldThrowsRuntimeException() {
+        when(courseRepository.findByName("Some Course")).thenReturn(Optional.empty());
+        var input = new InputEnrollStudent("SomeRa...", "Some name", "Some course", 4F,
+                1F, Shift.MORNING.initial(), new ArrayList<>());
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            enrollStudent.execute(input);
+        });
+
+        assertEquals("course: Some course not exists", exception.getMessage());
     }
 }

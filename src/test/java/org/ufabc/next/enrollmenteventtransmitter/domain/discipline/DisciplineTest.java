@@ -1,4 +1,4 @@
-package org.ufabc.next.enrollmenteventtransmitter.domain.student;
+package org.ufabc.next.enrollmenteventtransmitter.domain.discipline;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;

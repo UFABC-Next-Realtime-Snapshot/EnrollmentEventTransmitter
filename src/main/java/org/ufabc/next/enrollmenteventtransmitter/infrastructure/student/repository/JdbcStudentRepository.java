@@ -31,7 +31,7 @@ public class JdbcStudentRepository implements StudentRepository {
 
         StringBuilder insertEnrolls = new StringBuilder("INSERT INTO enrollments (student_id, discipline_id) VALUES");
         for(IDiscipline discipline : student.disciplines()){
-            insertEnrolls.append("(" + student.id() + "," + discipline.id() + ")");
+            insertEnrolls.append("(").append(student.id()).append(",").append(discipline.id()).append(")");
         }
         entityManager.createNativeQuery(insertEnrolls.toString());
     }

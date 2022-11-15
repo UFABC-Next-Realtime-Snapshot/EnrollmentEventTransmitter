@@ -32,6 +32,7 @@ public class DisciplineEntity extends PanacheEntityBase {
     @JoinColumn(name="practice_professor_id")
     public ProfessorEntity practiceProfessor;
     public short vacancies;
+    public short subscribers;
 
     public static DisciplineEntity toEntity(IDiscipline discipline) {
         var disciplineEntity = new DisciplineEntity();
@@ -44,6 +45,7 @@ public class DisciplineEntity extends PanacheEntityBase {
         disciplineEntity.theoryProfessor = ProfessorEntity.toEntity(discipline.theoryProfessor());
         disciplineEntity.practiceProfessor = ProfessorEntity.toEntity(discipline.practiceProfessor());
         disciplineEntity.vacancies = discipline.vacancies();
+        disciplineEntity.subscribers = discipline.subscribers();
         return disciplineEntity;
     }
 

@@ -15,6 +15,7 @@ public class Discipline implements IDiscipline {
     private Professor theoryProfessor;
     private Professor practiceProfessor;
     private short vacancies;
+    private short subscribers;
     private Shift shift;
     private Cr thresholdCr;
     private Cp thresholdCp;
@@ -62,6 +63,11 @@ public class Discipline implements IDiscipline {
     }
 
     @Override
+    public short subscribers() {
+        return this.subscribers;
+    }
+
+    @Override
     public Shift shift() {
         return this.shift;
     }
@@ -76,6 +82,11 @@ public class Discipline implements IDiscipline {
         return this.thresholdCp;
     }
 
+    @Override
+    public boolean isFull() {
+        return this.subscribers == this.vacancies;
+    }
+
     public static final class Builder {
         private Long id;
         private String code;
@@ -84,6 +95,7 @@ public class Discipline implements IDiscipline {
         private Professor theoryProfessor;
         private Professor practiceProfessor;
         private short vacancies;
+        private short subscribers;
         private Shift shift;
         private Cr thresholdCr;
         private Cp thresholdCp;
@@ -126,6 +138,11 @@ public class Discipline implements IDiscipline {
             return this;
         }
 
+        public Builder withSubscribers(short subscribers) {
+            this.subscribers = subscribers;
+            return this;
+        }
+
         public Builder withShift(Shift shift) {
             this.shift = shift;
             return this;
@@ -150,6 +167,7 @@ public class Discipline implements IDiscipline {
             discipline.theoryProfessor = this.theoryProfessor;
             discipline.practiceProfessor = this.practiceProfessor;
             discipline.vacancies = this.vacancies;
+            discipline.subscribers = subscribers;
             discipline.shift = checkNotNull(this.shift, "shift");
             discipline.thresholdCr = thresholdCr != null ? thresholdCr : new Cr();
             discipline.thresholdCp = thresholdCp != null ? thresholdCp : new Cp();

@@ -1,15 +1,6 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecase;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update.InputUpdateStudent;
@@ -23,7 +14,12 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 import org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.repository.CourseEntity;
 
-import io.quarkus.test.junit.QuarkusTest;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class UpdateStudentTest {
@@ -34,27 +30,27 @@ public class UpdateStudentTest {
 
     @Test
     @Transactional
-    public void whenStudentExistsShouldUpdateAndReturnOutputUpdateStudent(){
+    public void whenStudentExistsShouldUpdateAndReturnOutputUpdateStudent() {
         var input = new InputUpdateStudent("Some RA", 1, 2.9F, "Other course", 'M');
 
         var discipline = Discipline.aDiscipline()
-        .withId(2L)
-        .withCode("Some Code")
-        .withCourse(new Course(1L, "Some Course"))
-        .withName("Some Discipline")
-        .withPracticeProfessor(new Professor("Some practice professor"))
-        .withTheoryProfessor(new Professor("Some theory professsor"))
-        .withVacancies((short) 10)
-        .withShift(Shift.MORNING)
-        .build();
-        when(disciplineRepository.findByCode("Some Code")).thenReturn(discipline);
+                .withId(2L)
+                .withCode("Some Code")
+                .withCourse(new Course(1L, "Some Course"))
+                .withName("Some Discipline")
+                .withPracticeProfessor(new Professor("Some practice professor"))
+                .withTheoryProfessor(new Professor("Some theory professsor"))
+                .withVacancies((short) 10)
+                .withShift(Shift.MORNING)
+                .build();
+        when(disciplineRepository.findByCode("Some Code")).thenReturn(Optional.of(discipline));
 
         var courseEntity = CourseEntity.toEntity(new Course(null, "Other course"));
         courseEntity.persist();
 
         var student = new StudentBuilder(1L, "Some Name", "Some RA", Shift.MORNING)
-        .withDisciplines(List.of(discipline))
-        .build();
+                .withDisciplines(List.of(discipline))
+                .build();
         when(studentRepository.findByRa("Some RA")).thenReturn(Optional.of(student));
 
         var usecase = new UpdateStudent(studentRepository, disciplineRepository, calculateCoefficientsOfDiscipline);
@@ -66,7 +62,7 @@ public class UpdateStudentTest {
     }
 
     @Test
-    public void whenStudentNotExistsShouldThrowsRuntimeException(){
+    public void whenStudentNotExistsShouldThrowsRuntimeException() {
         var input = new InputUpdateStudent("Some RA", 1, 2.9F, "Other course", 'M');
 
         var courseEntity = CourseEntity.toEntity(new Course(null, "Other course"));
@@ -79,24 +75,24 @@ public class UpdateStudentTest {
     }
 
     @Test
-    public void whenCourseNotExistsShouldThrowsRuntimeException(){
+    public void whenCourseNotExistsShouldThrowsRuntimeException() {
         var input = new InputUpdateStudent("Some RA", 1, 2.9F, "Other course", 'M');
 
         var discipline = Discipline.aDiscipline()
-        .withId(2L)
-        .withCode("Some Code")
-        .withCourse(new Course(1L, "Some Course"))
-        .withName("Some Discipline")
-        .withPracticeProfessor(new Professor("Some practice professor"))
-        .withTheoryProfessor(new Professor("Some theory professsor"))
-        .withVacancies((short) 10)
-        .withShift(Shift.MORNING)
-        .build();
-        when(disciplineRepository.findByCode("Some Code")).thenReturn(discipline);
+                .withId(2L)
+                .withCode("Some Code")
+                .withCourse(new Course(1L, "Some Course"))
+                .withName("Some Discipline")
+                .withPracticeProfessor(new Professor("Some practice professor"))
+                .withTheoryProfessor(new Professor("Some theory professsor"))
+                .withVacancies((short) 10)
+                .withShift(Shift.MORNING)
+                .build();
+        when(disciplineRepository.findByCode("Some Code")).thenReturn(Optional.of(discipline));
 
         var student = new StudentBuilder(1L, "Some Name", "Some RA", Shift.MORNING)
-        .withDisciplines(List.of(discipline))
-        .build();
+                .withDisciplines(List.of(discipline))
+                .build();
         when(studentRepository.findByRa("Some RA")).thenReturn(Optional.of(student));
 
         var usecase = new UpdateStudent(studentRepository, disciplineRepository, calculateCoefficientsOfDiscipline);
@@ -104,27 +100,27 @@ public class UpdateStudentTest {
     }
 
     @Test
-    public void whenCrIsInvalidShouldThrowsRuntimeException(){
+    public void whenCrIsInvalidShouldThrowsRuntimeException() {
         var input = new InputUpdateStudent("Some RA", 1, 5, "Other course", 'M');
 
         var discipline = Discipline.aDiscipline()
-        .withId(2L)
-        .withCode("Some Code")
-        .withCourse(new Course(1L, "Some Course"))
-        .withName("Some Discipline")
-        .withPracticeProfessor(new Professor("Some practice professor"))
-        .withTheoryProfessor(new Professor("Some theory professsor"))
-        .withVacancies((short) 10)
-        .withShift(Shift.MORNING)
-        .build();
-        when(disciplineRepository.findByCode("Some Code")).thenReturn(discipline);
+                .withId(2L)
+                .withCode("Some Code")
+                .withCourse(new Course(1L, "Some Course"))
+                .withName("Some Discipline")
+                .withPracticeProfessor(new Professor("Some practice professor"))
+                .withTheoryProfessor(new Professor("Some theory professsor"))
+                .withVacancies((short) 10)
+                .withShift(Shift.MORNING)
+                .build();
+        when(disciplineRepository.findByCode("Some Code")).thenReturn(Optional.of(discipline));
 
         var courseEntity = CourseEntity.toEntity(new Course(null, "Other course"));
         courseEntity.persist();
 
         var student = new StudentBuilder(1L, "Some Name", "Some RA", Shift.MORNING)
-        .withDisciplines(List.of(discipline))
-        .build();
+                .withDisciplines(List.of(discipline))
+                .build();
         when(studentRepository.findByRa("Some RA")).thenReturn(Optional.of(student));
 
         var usecase = new UpdateStudent(studentRepository, disciplineRepository, calculateCoefficientsOfDiscipline);
@@ -132,27 +128,27 @@ public class UpdateStudentTest {
     }
 
     @Test
-    public void whenCpIsInvalidShouldThrowsRuntimeException(){
+    public void whenCpIsInvalidShouldThrowsRuntimeException() {
         var input = new InputUpdateStudent("Some RA", 2, 2.9F, "Other course", 'M');
 
         var discipline = Discipline.aDiscipline()
-        .withId(2L)
-        .withCode("Some Code")
-        .withCourse(new Course(1L, "Some Course"))
-        .withName("Some Discipline")
-        .withPracticeProfessor(new Professor("Some practice professor"))
-        .withTheoryProfessor(new Professor("Some theory professsor"))
-        .withVacancies((short) 10)
-        .withShift(Shift.MORNING)
-        .build();
-        when(disciplineRepository.findByCode("Some Code")).thenReturn(discipline);
+                .withId(2L)
+                .withCode("Some Code")
+                .withCourse(new Course(1L, "Some Course"))
+                .withName("Some Discipline")
+                .withPracticeProfessor(new Professor("Some practice professor"))
+                .withTheoryProfessor(new Professor("Some theory professsor"))
+                .withVacancies((short) 10)
+                .withShift(Shift.MORNING)
+                .build();
+        when(disciplineRepository.findByCode("Some Code")).thenReturn(Optional.of(discipline));
 
         var courseEntity = CourseEntity.toEntity(new Course(null, "Other course"));
         courseEntity.persist();
 
         var student = new StudentBuilder(1L, "Some Name", "Some RA", Shift.MORNING)
-        .withDisciplines(List.of(discipline))
-        .build();
+                .withDisciplines(List.of(discipline))
+                .build();
         when(studentRepository.findByRa("Some RA")).thenReturn(Optional.of(student));
 
         var usecase = new UpdateStudent(studentRepository, disciplineRepository, calculateCoefficientsOfDiscipline);

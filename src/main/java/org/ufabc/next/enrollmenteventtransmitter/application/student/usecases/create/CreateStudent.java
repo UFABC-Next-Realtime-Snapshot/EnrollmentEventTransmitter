@@ -2,13 +2,17 @@ package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.c
 
 import javax.enterprise.context.RequestScoped;
 
+import org.jboss.logging.Logger;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
+import org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.rest.CustomExceptionHandler;
 
 @RequestScoped
 public class CreateStudent {
     private final StudentRepository studentRepository;
+
+    private static final Logger LOGGER = Logger.getLogger(CustomExceptionHandler.class);
 
     public CreateStudent(StudentRepository studentRepository){
         this.studentRepository = studentRepository;
@@ -22,11 +26,12 @@ public class CreateStudent {
         }
 
         var student = new StudentBuilder(null, input.name, input.ra, Shift.fromInitial(input.shift))
-            .withCr(input.cr)
-            .withCp(input.cp)
-            .withCourse(null)
-            .build();
+                .withCr(input.cr)
+                .withCp(input.cp)
+                .withCourse(null)
+                .build();
         studentRepository.add(student);
+        LOGGER.info("student created");
         return new OutputCreateStudent();
     }
 }

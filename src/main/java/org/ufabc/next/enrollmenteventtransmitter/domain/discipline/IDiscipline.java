@@ -13,6 +13,8 @@ public interface IDiscipline {
     Professor theoryProfessor();
     Professor practiceProfessor();
     short vacancies();
+    short subscribers();
+    boolean isFull();
     Shift shift();
     Cr thresholdCr();
     Cp thresholdCp();

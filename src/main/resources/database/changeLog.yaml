@@ -146,6 +146,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: subscribers
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
                   name: course_id
                   type: bigint
                   constraints:

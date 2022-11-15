@@ -3,19 +3,21 @@ package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.e
 import java.util.List;
 
 public class InputEnrollStudent {
-    private final String studentRa;
-    private final List<String> disciplineCodes;
+    public final String ra;
+    public final String name;
+    public final String course;
+    public final Float cr;
+    public final Float cp;
+    public final char shift;
+    public final List<String> disciplineCodes;
 
-    public InputEnrollStudent(String studentRa, List<String> disciplineCodes){
-        this.studentRa = studentRa;
+    public InputEnrollStudent(String ra, String name, String course, Float cr, Float cp, char shift, List<String> disciplineCodes){
+        this.ra = ra;
+        this.name = name;
+        this.course = course;
+        this.cr = cr;
+        this.cp = cp;
+        this.shift = shift;
         this.disciplineCodes = disciplineCodes;
-    }
-
-    public String studentRa(){
-        return this.studentRa;
-    }
-
-    public List<String> disciplineCodes(){
-        return this.disciplineCodes;
     }
 }
