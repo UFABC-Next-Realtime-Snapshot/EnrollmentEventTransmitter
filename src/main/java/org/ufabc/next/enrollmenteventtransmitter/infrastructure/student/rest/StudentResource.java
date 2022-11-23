@@ -13,6 +13,7 @@ import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.en
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update.InputUpdateStudent;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update.UpdateStudent;
 import org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.rest.CustomExceptionHandler;
+import org.ufabc.next.enrollmenteventtransmitter.infrastructure.student.repository.JdbcStudentRepository;
 
 @Path("/student")
 public class StudentResource {
@@ -25,6 +26,7 @@ public class StudentResource {
 
     @Inject
     EnrollStudent enrollStudent;
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,6 +41,14 @@ public class StudentResource {
         updateStudent.execute(input);
         return Response.status(Response.Status.ACCEPTED).build();
     }
+
+    /*@GET
+    @PathParam(":ra/disciplines")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response disciplines(){
+        var student = studentRepository.findByRa("fala corno");
+        return Response.status(Response.Status.OK).build();
+    }*/
 
     @POST
     @Path("/enroll")

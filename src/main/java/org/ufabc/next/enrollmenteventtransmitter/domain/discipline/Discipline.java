@@ -160,7 +160,7 @@ public class Discipline implements IDiscipline {
 
         public Discipline build() {
             Discipline discipline = new Discipline();
-            discipline.id = checkNotNull(this.id, "id");
+            discipline.id = this.id;
             discipline.code = checkNotNull(this.code, "code");
             discipline.name = checkNotNull(this.name, "name");
             discipline.course = checkNotNull(this.course, "course");

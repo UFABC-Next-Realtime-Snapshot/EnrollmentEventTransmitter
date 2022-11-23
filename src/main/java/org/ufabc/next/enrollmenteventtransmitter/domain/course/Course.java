@@ -1,8 +1,8 @@
 package org.ufabc.next.enrollmenteventtransmitter.domain.course;
 
 public class Course {
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
 
     public Course(Long id, String name){
         this.id = id;

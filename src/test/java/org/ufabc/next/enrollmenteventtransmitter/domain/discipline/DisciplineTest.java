@@ -6,8 +6,6 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
-import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Discipline;
-import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.Professor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,26 +37,6 @@ public class DisciplineTest {
         assertEquals(new Professor("aPracticeProfessorPName"), discipline.practiceProfessor());
         assertEquals(new Professor("aTheoryProfessorName"), discipline.theoryProfessor());
         assertEquals(10, discipline.vacancies());
-    }
-
-    @Test
-    public void whenCreateDisciplineWithInvalidIdMustThrowIllegalArgumentException() {
-        Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> Discipline.aDiscipline()
-                        .withCourse(course)
-                        .withCode("aCode")
-                        .withName("aName")
-                        .withCR(new Cr(4))
-                        .withCP(new Cp(0))
-                        .withPracticeProfessor(new Professor("aPracticeProfessorPName"))
-                        .withTheoryProfessor(new Professor("aTheoryProfessorName"))
-                        .withVacancies((short) 50)
-                        .build());
-
-        String expectedMessage = "The parameter [id] cannot be null";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test

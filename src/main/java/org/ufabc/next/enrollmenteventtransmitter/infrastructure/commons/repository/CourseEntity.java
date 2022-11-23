@@ -1,14 +1,9 @@
 package org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.repository;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "courses")
@@ -20,6 +15,7 @@ public class CourseEntity extends PanacheEntityBase {
 
     public static CourseEntity toEntity(Course course) {
         var courseEntity = new CourseEntity();
+        courseEntity.id = course.id();
         courseEntity.name = course.name();
         return courseEntity;
     }

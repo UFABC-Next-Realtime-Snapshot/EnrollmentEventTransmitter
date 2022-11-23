@@ -11,13 +11,13 @@ import java.util.Optional;
 public class JdbcProfessorRepository implements ProfessorRepository {
     @Override
     public void add(Professor professor) {
-
+        ProfessorEntity.toEntity(professor).persist();
     }
 
     @Override
     public Optional<Professor> findByName(String name) {
         var entity = ProfessorEntity
-                .find("SELECT * FROM professors WHERE name = :name", Map.of("name", name))
+                .find("name = :name", Map.of("name", name))
                 .singleResultOptional();
 
         if (entity.isEmpty()) {

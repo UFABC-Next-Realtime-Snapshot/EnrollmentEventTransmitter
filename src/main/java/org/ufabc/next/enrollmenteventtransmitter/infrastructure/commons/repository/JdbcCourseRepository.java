@@ -12,7 +12,7 @@ public class JdbcCourseRepository implements CourseRepository {
     @Override
     public Optional<Course> findByName(String name) {
         var entity = CourseEntity
-                .find("SELECT * FROM courses WHERE name = :name", Map.of("name", name))
+                .find("name = :name", Map.of("name", name))
                 .singleResultOptional();
 
         if (entity.isEmpty()) {

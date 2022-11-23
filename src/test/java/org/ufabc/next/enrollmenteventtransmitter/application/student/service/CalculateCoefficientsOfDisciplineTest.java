@@ -3,6 +3,7 @@ package org.ufabc.next.enrollmenteventtransmitter.application.student.service;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.ufabc.next.enrollmenteventtransmitter.util.Cleanable;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
@@ -19,7 +20,7 @@ import javax.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
-public class CalculateCoefficientsOfDisciplineTest {
+public class CalculateCoefficientsOfDisciplineTest extends Cleanable {
     private final Long courseId = 12456566L;
     private final String courseName = "Test";
     private final Long otherCourseId = 12456598L;
@@ -42,7 +43,9 @@ public class CalculateCoefficientsOfDisciplineTest {
     private Course otherCourse;
     private IDiscipline discipline;
 
-    private void setup() {
+    @BeforeEach
+    @Transactional
+    public void setup() {
         entityManager.createNativeQuery("INSERT INTO professors (id, name) VALUES (:id, :name)")
                 .setParameter("id", 1L)
                 .setParameter("name", "Some")
@@ -138,21 +141,6 @@ public class CalculateCoefficientsOfDisciplineTest {
                 .setParameter("cp", 1F)
                 .setParameter("course_id", otherCourseId)
                 .executeUpdate();
-    }
-
-    @BeforeEach
-    @Transactional
-    public void clean() {
-        //--force
-        entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE TABLE students").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE TABLE professors").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE TABLE courses").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE TABLE disciplines").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE TABLE enrollments").executeUpdate();
-        entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
-
-        setup();
     }
 
     @Test
