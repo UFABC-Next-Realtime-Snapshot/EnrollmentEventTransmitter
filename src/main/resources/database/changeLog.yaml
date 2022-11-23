@@ -36,7 +36,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: shift
-                  type: VARCHAR(1)
+                  type: CHAR(1)
                   constraints:
                     nullable: false
               - column:
@@ -137,17 +137,17 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: shift
-                  type: VARCHAR(1)
+                  type: CHAR(1)
                   constraints:
                     nullable: false
               - column:
                   name: vacancies
-                  type: int
+                  type: SMALLINT
                   constraints:
                     nullable: false
               - column:
                   name: subscribers
-                  type: int
+                  type: SMALLINT
                   constraints:
                     nullable: false
               - column:
