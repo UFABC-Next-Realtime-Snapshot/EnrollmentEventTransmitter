@@ -28,7 +28,7 @@ public class DisciplineResourceTest extends Cleanable {
         given()
                 .contentType(ContentType.JSON)
                 .body(new DisciplineRequest("aNane", "aCode",
-                        practicalProfessor.name(), theoryProfessor.name(), course.name(), 'M'))
+                        practicalProfessor.name(), theoryProfessor.name(), course.name(), 'M', (short) 10))
                 .when()
                 .post("/discipline")
                 .then()
@@ -43,7 +43,8 @@ public class DisciplineResourceTest extends Cleanable {
         given()
                 .contentType(ContentType.JSON)
                 .body(new DisciplineRequest("aNane", "aCode",
-                        "aProfessor", "anotherProfessor", course.name(), 'M'))
+                        "aProfessor", "anotherProfessor",
+                        course.name(), 'M', (short) 30))
                 .when()
                 .post("/discipline")
                 .then()
@@ -58,7 +59,7 @@ public class DisciplineResourceTest extends Cleanable {
         given()
                 .contentType(ContentType.JSON)
                 .body(new DisciplineRequest("aNane", "aCode",
-                        "aProfessor", null, course.name(), 'N'))
+                        "aProfessor", null, course.name(), 'N', (short) 10))
                 .when()
                 .post("/discipline")
                 .then()
@@ -73,7 +74,7 @@ public class DisciplineResourceTest extends Cleanable {
         given()
                 .contentType(ContentType.JSON)
                 .body(new DisciplineRequest("aNane", "aCode",
-                        null, "aProfessor", course.name(), 'N'))
+                        null, "aProfessor", course.name(), 'N', (short) 20))
                 .when()
                 .post("/discipline")
                 .then()
@@ -89,7 +90,7 @@ public class DisciplineResourceTest extends Cleanable {
                 .contentType(ContentType.JSON)
                 .body(new DisciplineRequest("aNane", "aCode",
                         "aProfessor", "anotherProfessor", course.name(),
-                        'G'))
+                        'G', (short) 10))
                 .when()
                 .post("/discipline")
                 .then()
@@ -106,7 +107,8 @@ public class DisciplineResourceTest extends Cleanable {
         given()
                 .contentType(ContentType.JSON)
                 .body(new DisciplineRequest("aNane", "aCode",
-                        practicalProfessor.name(), theoryProfessor.name(), "aCourse", 'M'))
+                        practicalProfessor.name(), theoryProfessor.name(),
+                        "aCourse", 'M', (short) 10))
                 .when()
                 .post("/discipline")
                 .then()

@@ -37,6 +37,7 @@ public class CreateDisciplineTest {
                 .withTheoryProfessor(theoryProfessor)
                 .withName("aName")
                 .withCode("aCode")
+                .withVacancies((short) 10)
                 .withShift(Shift.MORNING)
                 .build();
 
@@ -62,6 +63,7 @@ public class CreateDisciplineTest {
                 .withPracticeProfessor(practicalProfessor)
                 .withName("aName")
                 .withCode("aCode")
+                .withVacancies((short) 30)
                 .withShift(Shift.MORNING)
                 .build();
 
@@ -88,6 +90,7 @@ public class CreateDisciplineTest {
                 .withPracticeProfessor(practicalProfessor)
                 .withName("aName")
                 .withCode("aCode")
+                .withVacancies((short) 90)
                 .withShift(Shift.MORNING)
                 .build();
 
@@ -104,6 +107,7 @@ public class CreateDisciplineTest {
                 .withPracticeProfessor(savedPracticalProfessor)
                 .withName("aName")
                 .withCode("aCode")
+                .withVacancies((short) 90)
                 .withShift(Shift.MORNING)
                 .build());
         verify(professorRepository).add(practicalProfessor);

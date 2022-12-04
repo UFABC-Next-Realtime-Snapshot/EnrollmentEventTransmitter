@@ -7,16 +7,18 @@ public class DisciplineRequest {
     public String theoryProfessor;
     public String code;
     public Character shift;
+    public short vacancies;
 
     public DisciplineRequest(String name, String code,
                              String practicalProfessor, String theoryProfessor,
-                              String course, Character shift) {
+                              String course, Character shift, short vacancies) {
         this.course = course;
         this.practicalProfessor = practicalProfessor;
         this.theoryProfessor = theoryProfessor;
         this.name = name;
         this.code = code;
         this.shift = shift;
+        this.vacancies = vacancies;
     }
 
     public DisciplineRequest() {
@@ -44,5 +46,9 @@ public class DisciplineRequest {
 
     public Character shift() {
         return shift;
+    }
+
+    public short vacancies() {
+        return vacancies;
     }
 }

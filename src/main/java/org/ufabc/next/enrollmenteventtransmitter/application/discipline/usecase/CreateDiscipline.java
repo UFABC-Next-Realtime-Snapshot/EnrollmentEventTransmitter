@@ -42,6 +42,7 @@ public class CreateDiscipline {
                 .withTheoryProfessor(theoryProfessor)
                 .withPracticeProfessor(practiceProfessor)
                 .withCourse(course)
+                .withVacancies(discipline.vacancies())
                 .withShift(discipline.shift())
                 .build());
     }

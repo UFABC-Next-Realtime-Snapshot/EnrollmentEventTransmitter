@@ -35,6 +35,7 @@ public class DisciplineResource {
                 .withPracticeProfessor(request.practicalProfessor == null ? null : new Professor(request.practicalProfessor()))
                 .withCourse(new Course(request.course()))
                 .withShift(Shift.fromInitial(request.shift()))
+                .withVacancies(request.vacancies())
                 .build();
     }
 }
