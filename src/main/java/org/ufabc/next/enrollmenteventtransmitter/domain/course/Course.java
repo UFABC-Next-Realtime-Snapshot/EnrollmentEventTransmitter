@@ -9,6 +9,11 @@ public class Course {
         this.name = name;
     }
 
+    public Course(String name){
+        this.id = null;
+        this.name = name;
+    }
+
     public Long id(){
         return this.id;
     }

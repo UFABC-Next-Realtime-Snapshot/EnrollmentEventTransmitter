@@ -22,14 +22,10 @@ public class JdbcProfessorRepositoryTest extends Cleanable {
         String name = "aName";
         Professor professor = new Professor(name);
 
-        professorRepository.add(professor);
+        var savedProfessor = professorRepository.add(professor);
 
-        var savedProfessor = professorRepository.findByName(name);
-
-        assertTrue(savedProfessor.isPresent());
-
-        assertEquals(1, savedProfessor.get().id());
-        assertEquals(professor.name(), savedProfessor.get().name());
+        assertEquals(1, savedProfessor.id());
+        assertEquals(professor.name(), savedProfessor.name());
     }
 
     @Test
@@ -41,7 +37,7 @@ public class JdbcProfessorRepositoryTest extends Cleanable {
 
     @Test
     @Transactional
-    public void shouldFindCourse() {
+    public void shouldFindProfessor() {
         String name = "aName";
         Professor professor = new Professor(name);
         professorRepository.add(professor);

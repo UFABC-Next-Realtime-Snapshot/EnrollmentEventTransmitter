@@ -4,8 +4,10 @@ import org.jboss.logging.Logger;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-public class CustomExceptionHandler  extends ExceptionHandler
+@Provider
+public class CustomExceptionHandler extends ExceptionHandler
         implements ExceptionMapper<Exception> {
 
     private static final Logger LOGGER = Logger.getLogger(CustomExceptionHandler.class);

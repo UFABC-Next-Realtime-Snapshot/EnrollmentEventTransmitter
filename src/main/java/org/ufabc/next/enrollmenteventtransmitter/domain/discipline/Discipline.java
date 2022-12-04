@@ -5,6 +5,8 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 
+import java.util.Objects;
+
 import static org.ufabc.next.enrollmenteventtransmitter.domain.commons.PreConditions.checkNotNull;
 
 public class Discipline implements IDiscipline {
@@ -85,6 +87,25 @@ public class Discipline implements IDiscipline {
     @Override
     public boolean isFull() {
         return this.subscribers == this.vacancies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Discipline that = (Discipline) o;
+        return vacancies == that.vacancies && subscribers == that.subscribers &&
+                Objects.equals(id, that.id) && Objects.equals(code, that.code) &&
+                Objects.equals(name, that.name) && Objects.equals(course, that.course) &&
+                Objects.equals(theoryProfessor, that.theoryProfessor) &&
+                Objects.equals(practiceProfessor, that.practiceProfessor) &&
+                shift == that.shift && Objects.equals(thresholdCr, that.thresholdCr) &&
+                Objects.equals(thresholdCp, that.thresholdCp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, name, course, theoryProfessor, practiceProfessor, vacancies, subscribers, shift, thresholdCr, thresholdCp);
     }
 
     public static final class Builder {

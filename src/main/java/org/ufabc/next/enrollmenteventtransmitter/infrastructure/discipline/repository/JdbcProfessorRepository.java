@@ -10,8 +10,10 @@ import java.util.Optional;
 @ApplicationScoped
 public class JdbcProfessorRepository implements ProfessorRepository {
     @Override
-    public void add(Professor professor) {
-        ProfessorEntity.toEntity(professor).persist();
+    public Professor add(Professor professor) {
+        var professorEntity = ProfessorEntity.toEntity(professor);
+        professorEntity.persist();
+        return ProfessorEntity.toModel(professorEntity);
     }
 
     @Override
