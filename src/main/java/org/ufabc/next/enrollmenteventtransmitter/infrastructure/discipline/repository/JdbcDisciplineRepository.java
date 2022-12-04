@@ -29,12 +29,6 @@ public class JdbcDisciplineRepository implements DisciplineRepository {
             throw new ResultNotFoundException(String.format("Discipline %s is nonexistent", discipline.code()));
         }
 
-        Query statement = entityManager.createNativeQuery(
-                        "SELECT COUNT(student_id) FROM enrollments WHERE discipline_id = :disciplineId")
-                .setParameter("disciplineId", discipline.id());
-
-        short subscribers = ((BigInteger) statement.getResultList().get(0)).shortValue();
-
         var singleResultOptional = DisciplineEntity
                 .find("id = :id", Map.of("id", discipline.id()))
                 .singleResultOptional();
@@ -45,6 +39,12 @@ public class JdbcDisciplineRepository implements DisciplineRepository {
 
         var disciplineToUpdate = (DisciplineEntity) singleResultOptional.get();
 
+        Query statement = entityManager.createNativeQuery(
+                        "SELECT COUNT(student_id) FROM enrollments WHERE discipline_id = :disciplineId")
+                .setParameter("disciplineId", discipline.id());
+
+        short subscribers = ((BigInteger) statement.getResultList().get(0)).shortValue();
+        
         disciplineToUpdate.setCp(discipline.thresholdCp().value());
         disciplineToUpdate.setCr(discipline.thresholdCr().value());
         disciplineToUpdate.setSubscribers(subscribers);
