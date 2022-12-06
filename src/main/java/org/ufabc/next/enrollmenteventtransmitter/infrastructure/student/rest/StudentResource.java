@@ -1,5 +1,6 @@
 package org.ufabc.next.enrollmenteventtransmitter.infrastructure.student.rest;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,20 +13,24 @@ import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.en
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.enroll.InputEnrollStudent;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update.InputUpdateStudent;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update.UpdateStudent;
-import org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.rest.CustomExceptionHandler;
-import org.ufabc.next.enrollmenteventtransmitter.infrastructure.student.repository.JdbcStudentRepository;
 
 @Path("/student")
 public class StudentResource {
 
-    @Inject
-    CreateStudent createStudent;
 
-    @Inject
-    UpdateStudent updateStudent;
+    private final CreateStudent createStudent;
 
-    @Inject
-    EnrollStudent enrollStudent;
+
+    private final UpdateStudent updateStudent;
+
+
+    private final EnrollStudent enrollStudent;
+
+    public StudentResource(CreateStudent createStudent, UpdateStudent updateStudent, EnrollStudent enrollStudent){
+        this.createStudent = createStudent;
+        this.updateStudent = updateStudent;
+        this.enrollStudent = enrollStudent;
+    }
 
 
     @POST
@@ -41,14 +46,6 @@ public class StudentResource {
         updateStudent.execute(input);
         return Response.status(Response.Status.ACCEPTED).build();
     }
-
-    /*@GET
-    @PathParam(":ra/disciplines")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response disciplines(){
-        var student = studentRepository.findByRa("fala corno");
-        return Response.status(Response.Status.OK).build();
-    }*/
 
     @POST
     @Path("/enroll")

@@ -1,22 +1,24 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.events;
 
-import javax.inject.Inject;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.jboss.logging.Logger;
 import org.ufabc.next.enrollmenteventtransmitter.application.commons.events.IEventHandler;
-import org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.rest.CustomExceptionHandler;
 import org.ufabc.next.enrollmenteventtransmitter.infrastructure.discipline.websocket.DisciplineWebSocket;
 
+@ApplicationScoped
 public class StudentRegisteredInDisciplineHandler implements IEventHandler<StudentRegisteredInDiscipline>{
 
-    @Inject
-    DisciplineWebSocket disciplineWebSocket;
-
+    private final DisciplineWebSocket webSocket;
     private static final Logger LOGGER = Logger.getLogger(StudentRegisteredInDisciplineHandler.class);
+
+    public StudentRegisteredInDisciplineHandler(DisciplineWebSocket webSocket){
+        this.webSocket = webSocket;
+    }
 
     @Override
     public void handle(StudentRegisteredInDiscipline event){
-        disciplineWebSocket.onMessage("", event.discipline().code());
+        webSocket.onMessage("", event.discipline().code());
     }
     
 }

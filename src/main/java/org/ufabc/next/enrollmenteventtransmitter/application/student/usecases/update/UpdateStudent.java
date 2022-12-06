@@ -1,6 +1,6 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
@@ -9,7 +9,7 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.DisciplineRep
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
-@RequestScoped
+@ApplicationScoped
 public class UpdateStudent {
 
     private final StudentRepository studentRepository;

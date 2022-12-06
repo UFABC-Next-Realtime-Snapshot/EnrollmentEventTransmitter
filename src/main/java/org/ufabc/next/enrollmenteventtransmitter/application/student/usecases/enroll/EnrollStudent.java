@@ -3,7 +3,7 @@ package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.e
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.jboss.logging.Logger;
 import org.ufabc.next.enrollmenteventtransmitter.application.commons.events.IEventDispatcher;
@@ -19,7 +19,7 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.student.IStudent;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
-@RequestScoped
+@ApplicationScoped
 public class EnrollStudent {
 
     private final DisciplineRepository disciplineRepository;
