@@ -6,7 +6,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.jboss.logging.Logger;
-import org.ufabc.next.enrollmenteventtransmitter.application.commons.events.IEventDispatcher;
+import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentEventDispatcher;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRegisteredInDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRemovedFromDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
@@ -26,7 +26,7 @@ public class EnrollStudent {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline;
-    private final IEventDispatcher dispatcher;
+    private final StudentEventDispatcher dispatcher;
     private static final Logger LOGGER = Logger.getLogger(EnrollStudent.class);
 
     public EnrollStudent(
@@ -34,7 +34,7 @@ public class EnrollStudent {
             StudentRepository studentRepository,
             CourseRepository courseRepository,
             CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline,
-            IEventDispatcher dispatcher) {
+            StudentEventDispatcher dispatcher) {
         this.disciplineRepository = disciplineRepository;
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;

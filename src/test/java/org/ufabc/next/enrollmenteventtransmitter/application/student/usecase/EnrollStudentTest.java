@@ -2,7 +2,7 @@ package org.ufabc.next.enrollmenteventtransmitter.application.student.usecase;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.ufabc.next.enrollmenteventtransmitter.application.commons.events.IEventDispatcher;
+import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentEventDispatcher;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRegisteredInDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRemovedFromDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
@@ -32,13 +32,13 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class EnrollStudentTest {
-    public IEventDispatcher dispatcher = mock(IEventDispatcher.class);
-    public StudentRepository studentRepository = mock(StudentRepository.class);
-    public DisciplineRepository disciplineRepository = mock(DisciplineRepository.class);
-    public CourseRepository courseRepository = mock(CourseRepository.class);
-    public CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline = mock(
+    private final StudentEventDispatcher dispatcher = mock(StudentEventDispatcher.class);
+    private final StudentRepository studentRepository = mock(StudentRepository.class);
+    private final DisciplineRepository disciplineRepository = mock(DisciplineRepository.class);
+    private final CourseRepository courseRepository = mock(CourseRepository.class);
+    private final CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline = mock(
             CalculateCoefficientsOfDiscipline.class);
-    public EnrollStudent enrollStudent = new EnrollStudent(
+    private final EnrollStudent enrollStudent = new EnrollStudent(
             disciplineRepository,
             studentRepository,
             courseRepository,
@@ -168,7 +168,7 @@ public class EnrollStudentTest {
         disciplineCodes.add("Other code");
         var input = new InputEnrollStudent(
                 "SomeRa...", "Some name", "Some course", 4F, 1F,
-                Shift.MORNING.initial() , disciplineCodes);
+                Shift.MORNING.initial(), disciplineCodes);
         enrollStudent.execute(input);
 
         verify(courseRepository).findByName("Some course");

@@ -2,7 +2,7 @@ package org.ufabc.next.enrollmenteventtransmitter.infrastructure.discipline.repo
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResultNotFoundException;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
@@ -204,7 +204,7 @@ public class JdbcDisciplineRepositoryTest extends Cleanable {
                 .withTheoryProfessor(theoryProfessor)
                 .withVacancies((short) 10)
                 .build();
-        Exception exception = assertThrows(ResultNotFoundException.class,
+        Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> disciplineRepository.update(discipline));
 
         String expectedMessage = "Discipline aCode is nonexistent";
@@ -231,7 +231,7 @@ public class JdbcDisciplineRepositoryTest extends Cleanable {
                 .withTheoryProfessor(theoryProfessor)
                 .withVacancies((short) 10)
                 .build();
-        Exception exception = assertThrows(ResultNotFoundException.class,
+        Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> disciplineRepository.update(discipline));
 
         String expectedMessage = "Discipline aCode is nonexistent";

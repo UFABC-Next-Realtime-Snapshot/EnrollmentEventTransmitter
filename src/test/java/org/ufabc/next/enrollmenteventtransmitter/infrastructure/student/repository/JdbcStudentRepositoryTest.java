@@ -2,7 +2,7 @@ package org.ufabc.next.enrollmenteventtransmitter.infrastructure.student.reposit
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResultNotFoundException;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
@@ -90,7 +90,7 @@ public class JdbcStudentRepositoryTest extends Cleanable {
                 )
                 .build();
 
-        Exception exception = assertThrows(ResultNotFoundException.class,
+        Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> studentRepository.update(newStudent));
 
         String expectedMessage = "student not found";
@@ -117,7 +117,7 @@ public class JdbcStudentRepositoryTest extends Cleanable {
                 )
                 .build();
 
-        Exception exception = assertThrows(ResultNotFoundException.class,
+        Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> studentRepository.update(newStudent));
 
         String expectedMessage = "student not found";

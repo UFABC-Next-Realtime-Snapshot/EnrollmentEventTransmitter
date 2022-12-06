@@ -6,7 +6,6 @@ import javax.transaction.Transactional;
 import org.jboss.logging.Logger;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
-import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.CourseRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
@@ -29,11 +28,11 @@ public class CreateStudent {
         var optionalCourse = courseRepository.findByName(input.course);
 
         if (optionalStudent.isPresent()) {
-            throw new ResourceNotFoundException("O estudante ja existe");
+            throw new ResourceNotFoundException("student already exists");
         }
 
         if (optionalCourse.isEmpty()) {
-            throw new ResourceNotFoundException("Nao achei o curso");
+            throw new ResourceNotFoundException("course not found");
         }
 
         var course = optionalCourse.get();

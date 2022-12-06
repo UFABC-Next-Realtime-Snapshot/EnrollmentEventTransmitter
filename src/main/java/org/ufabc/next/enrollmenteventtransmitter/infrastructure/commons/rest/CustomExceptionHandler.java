@@ -4,8 +4,9 @@ import org.jboss.logging.Logger;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-//@Provider
+@Provider
 public class CustomExceptionHandler extends ExceptionHandler
         implements ExceptionMapper<Exception> {
 
@@ -16,7 +17,7 @@ public class CustomExceptionHandler extends ExceptionHandler
         var status = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
         LOGGER.error(exception.getMessage());
         var details = new ExceptionDetails("Application Error", status,
-                "Application error!", System.currentTimeMillis());
+                "Application error", System.currentTimeMillis());
         return Response.status(status).entity(details).build();
     }
 }

@@ -1,6 +1,6 @@
 package org.ufabc.next.enrollmenteventtransmitter.infrastructure.student.repository;
 
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResultNotFoundException;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.IStudent;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
@@ -24,7 +24,7 @@ public class JdbcStudentRepository implements StudentRepository {
     @Override
     public void update(IStudent student) {
         if (student.ra().value() == null || student.id() == null) {
-            throw new ResultNotFoundException("student not found");
+            throw new ResourceNotFoundException("student not found");
         }
 
         entityManager.createNativeQuery("DELETE FROM enrollments WHERE student_id = :studentId")
@@ -35,7 +35,7 @@ public class JdbcStudentRepository implements StudentRepository {
                 .singleResultOptional();
 
         if (optional.isEmpty()) {
-            throw new ResultNotFoundException("student not found");
+            throw new ResourceNotFoundException("student not found");
         }
 
         var updatedStudent = (StudentEntity) optional.get();

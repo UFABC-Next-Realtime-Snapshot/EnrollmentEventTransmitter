@@ -1,6 +1,6 @@
 package org.ufabc.next.enrollmenteventtransmitter.infrastructure.discipline.repository;
 
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResultNotFoundException;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.DisciplineRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.IDiscipline;
 
@@ -26,7 +26,7 @@ public class JdbcDisciplineRepository implements DisciplineRepository {
     @Override
     public void update(IDiscipline discipline) {
         if (discipline.id() == null) {
-            throw new ResultNotFoundException(String.format("Discipline %s is nonexistent", discipline.code()));
+            throw new ResourceNotFoundException(String.format("Discipline %s is nonexistent", discipline.code()));
         }
 
         var singleResultOptional = DisciplineEntity
@@ -34,7 +34,7 @@ public class JdbcDisciplineRepository implements DisciplineRepository {
                 .singleResultOptional();
 
         if (singleResultOptional.isEmpty()) {
-            throw new ResultNotFoundException(String.format("Discipline %s is nonexistent", discipline.code()));
+            throw new ResourceNotFoundException(String.format("Discipline %s is nonexistent", discipline.code()));
         }
 
         var disciplineToUpdate = (DisciplineEntity) singleResultOptional.get();

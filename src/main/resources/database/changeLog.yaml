@@ -250,3 +250,12 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: disciplines
             validate: true
+  - changeSet:
+      id: 2
+      author: paixao.thales
+      changes:
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: INSERT INTO courses (name) VALUES ('BCT'), ('BCH'), ('BCC'), ('EAU'), ('AERO'), ('EBM'), ('EE'), ('BM'), ('EG')
