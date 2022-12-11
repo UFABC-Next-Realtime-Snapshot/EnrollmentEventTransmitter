@@ -73,7 +73,7 @@ public class StudentEntity extends PanacheEntityBase {
         this.shift = shift.initial();
     }
 
-    public void cleanableAddAll(List<IDiscipline> disciplines) {
+    public void cleanAndAddAll(List<IDiscipline> disciplines) {
         this.disciplines = new ArrayList<>(disciplines.stream()
                 .map(DisciplineEntity::toEntity)
                 .toList());

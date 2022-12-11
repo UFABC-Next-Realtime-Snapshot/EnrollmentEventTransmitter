@@ -28,7 +28,7 @@ public class DisciplineWebSocket {
         this.disciplineService = disciplineService;
         sessions = new ConcurrentHashMap<>();
         disciplineService.findAll()
-                .forEach(discipline -> sessions.put(discipline.code(), new ArrayList<>()));
+                .forEach(discipline -> addDisciplineInSession(discipline.code()));
         gson = new Gson();
     }
 
@@ -64,6 +64,10 @@ public class DisciplineWebSocket {
 
         var discipline = disciplineService.findByCode(code);
         discipline.ifPresent(iDiscipline -> broadcast(gson.toJson(DisciplineResponse.from(iDiscipline)), code));
+    }
+
+    public void addDisciplineInSession(String disciplineCode) {
+        sessions.put(disciplineCode, new ArrayList<>());
     }
 
     private void broadcast(String message, String code) {

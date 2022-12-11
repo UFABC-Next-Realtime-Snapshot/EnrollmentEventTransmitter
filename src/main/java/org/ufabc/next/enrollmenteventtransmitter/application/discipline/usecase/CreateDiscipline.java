@@ -1,6 +1,8 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.discipline.usecase;
 
 import org.jboss.logging.Logger;
+import org.ufabc.next.enrollmenteventtransmitter.application.discipline.event.AddDisciplineEvent;
+import org.ufabc.next.enrollmenteventtransmitter.application.discipline.event.DisciplineEventDispatcher;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.CourseRepository;
@@ -16,12 +18,15 @@ public class CreateDiscipline {
     private final DisciplineRepository disciplineRepository;
     private final CourseRepository courseRepository;
     private final ProfessorRepository professorRepository;
+    private final DisciplineEventDispatcher disciplineEventDispatcher;
 
     public CreateDiscipline(DisciplineRepository disciplineRepository,
-                            CourseRepository courseRepository, ProfessorRepository professorRepository) {
+                            CourseRepository courseRepository, ProfessorRepository professorRepository,
+                            DisciplineEventDispatcher disciplineEventDispatcher) {
         this.disciplineRepository = disciplineRepository;
         this.courseRepository = courseRepository;
         this.professorRepository = professorRepository;
+        this.disciplineEventDispatcher = disciplineEventDispatcher;
     }
 
     @Transactional
@@ -45,6 +50,8 @@ public class CreateDiscipline {
                 .withVacancies(discipline.vacancies())
                 .withShift(discipline.shift())
                 .build());
+
+        disciplineEventDispatcher.notify(new AddDisciplineEvent(discipline.code()));
     }
 
     private Course courseOf(IDiscipline discipline) {

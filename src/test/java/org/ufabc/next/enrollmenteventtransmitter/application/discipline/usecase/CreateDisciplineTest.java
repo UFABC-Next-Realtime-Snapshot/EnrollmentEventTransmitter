@@ -2,6 +2,8 @@ package org.ufabc.next.enrollmenteventtransmitter.application.discipline.usecase
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
+import org.ufabc.next.enrollmenteventtransmitter.application.discipline.event.AddDisciplineEvent;
+import org.ufabc.next.enrollmenteventtransmitter.application.discipline.event.DisciplineEventDispatcher;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
@@ -19,8 +21,9 @@ public class CreateDisciplineTest {
     private final DisciplineRepository disciplineRepository = mock(DisciplineRepository.class);
     private final CourseRepository courseRepository = mock(CourseRepository.class);
     private final ProfessorRepository professorRepository = mock(ProfessorRepository.class);
+    private final DisciplineEventDispatcher disciplineEventDispatcher = mock(DisciplineEventDispatcher.class);
     private final CreateDiscipline createDiscipline = new CreateDiscipline(disciplineRepository,
-            courseRepository, professorRepository);
+            courseRepository, professorRepository, disciplineEventDispatcher);
 
     @Test
     public void shouldCreateWhenCourseExistAndProfessorsExist() {
@@ -49,6 +52,7 @@ public class CreateDisciplineTest {
         createDiscipline.execute(discipline);
 
         verify(disciplineRepository).add(discipline);
+        verify(disciplineEventDispatcher).notify(new AddDisciplineEvent(discipline.code()));
     }
 
     @Test
@@ -74,6 +78,7 @@ public class CreateDisciplineTest {
         createDiscipline.execute(discipline);
 
         verify(disciplineRepository).add(discipline);
+        verify(disciplineEventDispatcher).notify(new AddDisciplineEvent(discipline.code()));
         verify(professorRepository, never()).add(any());
     }
 
@@ -111,6 +116,7 @@ public class CreateDisciplineTest {
                 .withShift(Shift.MORNING)
                 .build());
         verify(professorRepository).add(practicalProfessor);
+        verify(disciplineEventDispatcher).notify(new AddDisciplineEvent(discipline.code()));
     }
 
     @Test
@@ -135,6 +141,7 @@ public class CreateDisciplineTest {
         createDiscipline.execute(discipline);
 
         verify(disciplineRepository).add(discipline);
+        verify(disciplineEventDispatcher).notify(new AddDisciplineEvent(discipline.code()));
         verify(professorRepository, never()).add(any());
     }
 
@@ -142,6 +149,7 @@ public class CreateDisciplineTest {
     public void shouldCreateWhenCourseExistAndPracticalProfessorsIsNullAndTheoryProfessorNotExist() {
         String courseName = "aName";
         String theoryProfessorName = "aName";
+        String disciplineCode = "aCode";
         Course aCourse = new Course(1L, courseName);
         Professor theoryProfessor = new Professor(theoryProfessorName);
         Professor savedTheoryProfessor = new Professor(1L, theoryProfessorName);
@@ -150,7 +158,7 @@ public class CreateDisciplineTest {
                 .withCourse(aCourse)
                 .withTheoryProfessor(theoryProfessor)
                 .withName("aName")
-                .withCode("aCode")
+                .withCode(disciplineCode)
                 .withShift(Shift.MORNING)
                 .build();
 
@@ -166,9 +174,10 @@ public class CreateDisciplineTest {
                 .withCourse(aCourse)
                 .withTheoryProfessor(savedTheoryProfessor)
                 .withName("aName")
-                .withCode("aCode")
+                .withCode(disciplineCode)
                 .withShift(Shift.MORNING)
                 .build());
+        verify(disciplineEventDispatcher).notify(new AddDisciplineEvent(disciplineCode));
         verify(professorRepository).add(theoryProfessor);
     }
 
@@ -196,6 +205,7 @@ public class CreateDisciplineTest {
         createDiscipline.execute(discipline);
 
         verify(disciplineRepository, never()).add(discipline);
+        verify(disciplineEventDispatcher, never()).notify(new AddDisciplineEvent(code));
     }
 
     @Test
@@ -231,5 +241,6 @@ public class CreateDisciplineTest {
         assertTrue(actualMessage.contains(expectedMessage));
 
         verify(disciplineRepository, never()).add(discipline);
+        verify(disciplineEventDispatcher, never()).notify(new AddDisciplineEvent(code));
     }
 }
