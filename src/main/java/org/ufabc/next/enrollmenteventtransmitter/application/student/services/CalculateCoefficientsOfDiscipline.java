@@ -1,24 +1,25 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.services;
 
-import java.util.ArrayList;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
+import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.IDiscipline;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
-import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
-import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.IDiscipline;
 
 @RequestScoped
 public class CalculateCoefficientsOfDiscipline {
     @Inject
     EntityManager entityManager;
 
-    public void execute(IDiscipline discipline){
+    public void execute(IDiscipline discipline) {
         if (!discipline.isFull()) {
+            discipline.changeThresholdCr(new Cr(0));
+            discipline.changeThresholdCp(new Cp(0));
             return;
         }
+
         String query = "SELECT cr, cp FROM (SELECT " +
                 "(CASE course_id " +
                 "WHEN :courseId THEN 1 " +
@@ -45,8 +46,9 @@ public class CalculateCoefficientsOfDiscipline {
         }
 
         var coefficients = (Object[]) resultSet.get(0);
-        var cr = new Cr((float) coefficients[0]);
-        var cp = new Cp((float) coefficients[1]);
+        var cr = new Cr(Float.parseFloat(coefficients[0].toString()));
+        var cp = new Cp(Float.parseFloat(coefficients[1].toString()));
+
         discipline.changeThresholdCr(cr);
         discipline.changeThresholdCp(cp);
     }
