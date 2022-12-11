@@ -29,6 +29,13 @@ public class JdbcProfessorRepositoryTest extends Cleanable {
     }
 
     @Test
+    public void whenNameIsNullMustReturnEmpty() {
+        var professor = professorRepository.findByName(null);
+
+        assertFalse(professor.isPresent());
+    }
+
+    @Test
     public void shouldNotFindProfessor() {
         var professor = professorRepository.findByName("aProfessor");
 

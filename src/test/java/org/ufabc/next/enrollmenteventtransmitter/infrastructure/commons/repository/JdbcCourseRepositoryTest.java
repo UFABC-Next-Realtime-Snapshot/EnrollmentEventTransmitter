@@ -24,6 +24,13 @@ public class JdbcCourseRepositoryTest extends Cleanable {
     }
 
     @Test
+    public void whenNameIsNullMustReturnEmpty() {
+        var course = courseRepository.findByName(null);
+
+        assertFalse(course.isPresent());
+    }
+
+    @Test
     @Transactional
     public void shouldFindCourse() {
         String name = "aCourse";

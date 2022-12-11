@@ -78,6 +78,13 @@ public class JdbcDisciplineRepositoryTest extends Cleanable {
     }
 
     @Test
+    public void whenCodeIsNullMustReturnEmpty() {
+        var discipline = disciplineRepository.findByCode(null);
+
+        assertTrue(discipline.isEmpty());
+    }
+
+    @Test
     @Transactional
     public void shouldFindAll() {
         Course course = CourseFixture.aCourse();

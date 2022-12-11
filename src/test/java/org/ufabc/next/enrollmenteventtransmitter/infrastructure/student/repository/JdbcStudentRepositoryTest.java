@@ -73,6 +73,13 @@ public class JdbcStudentRepositoryTest extends Cleanable {
     }
 
     @Test
+    public void whenRaIsNullMustReturnEmpty() {
+        var student = studentRepository.findByRa(null);
+
+        assertTrue(student.isEmpty());
+    }
+
+    @Test
     @Transactional
     public void whenDisciplineWithIdAndRAIsNonexistentThenThrowResultNotFoundException() {
         Course course = CourseFixture.aCourse();

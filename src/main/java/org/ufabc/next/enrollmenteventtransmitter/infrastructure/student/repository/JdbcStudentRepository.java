@@ -31,7 +31,8 @@ public class JdbcStudentRepository implements StudentRepository {
                 .setParameter("studentId", student.id())
                 .executeUpdate();
 
-        var optional = StudentEntity.find("ra = :ra", Map.of("ra", student.ra().value()))
+        var optional = StudentEntity.find("ra = :ra",
+                        Map.of("ra", student.ra().value()))
                 .singleResultOptional();
 
         if (optional.isEmpty()) {
@@ -43,12 +44,16 @@ public class JdbcStudentRepository implements StudentRepository {
         updatedStudent.setCp(student.cp().value());
         updatedStudent.setCourse(student.course());
         updatedStudent.setShift(student.shift());
-        updatedStudent.cleanableAddAll(student.disciplines());
+        updatedStudent.cleanAndAddAll(student.disciplines());
         updatedStudent.persist();
     }
 
     @Override
     public Optional<IStudent> findByRa(String ra) {
+        if (ra == null) {
+            return Optional.empty();
+        }
+
         var result = StudentEntity
                 .find("ra = :ra", Map.of("ra", ra))
                 .singleResultOptional();

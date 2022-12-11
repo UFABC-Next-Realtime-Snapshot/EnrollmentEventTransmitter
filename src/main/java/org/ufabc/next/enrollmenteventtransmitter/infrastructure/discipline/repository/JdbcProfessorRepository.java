@@ -18,6 +18,10 @@ public class JdbcProfessorRepository implements ProfessorRepository {
 
     @Override
     public Optional<Professor> findByName(String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
+
         var entity = ProfessorEntity
                 .find("name = :name", Map.of("name", name))
                 .singleResultOptional();

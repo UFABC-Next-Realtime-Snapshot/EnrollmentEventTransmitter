@@ -53,6 +53,10 @@ public class JdbcDisciplineRepository implements DisciplineRepository {
 
     @Override
     public Optional<IDiscipline> findByCode(String code) {
+        if (code == null) {
+            return Optional.empty();
+        }
+
         var entity = DisciplineEntity
                 .find("code = :code", Map.of("code", code))
                 .singleResultOptional();

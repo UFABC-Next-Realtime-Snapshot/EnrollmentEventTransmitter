@@ -11,6 +11,10 @@ import java.util.Optional;
 public class JdbcCourseRepository implements CourseRepository {
     @Override
     public Optional<Course> findByName(String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
+
         var entity = CourseEntity
                 .find("name = :name", Map.of("name", name))
                 .singleResultOptional();
