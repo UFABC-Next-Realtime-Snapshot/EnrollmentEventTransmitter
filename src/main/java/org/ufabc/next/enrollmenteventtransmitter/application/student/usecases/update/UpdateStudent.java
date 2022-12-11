@@ -1,6 +1,7 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
@@ -27,6 +28,7 @@ public class UpdateStudent {
         this.calculateCoefficientsOfDiscipline = calculateCoefficientsOfDiscipline;
     }
 
+    @Transactional
     public OutputUpdateStudent execute(InputUpdateStudent input) {
         var optionalStudent = studentRepository.findByRa(input.ra);
         if (optionalStudent.isEmpty()) {

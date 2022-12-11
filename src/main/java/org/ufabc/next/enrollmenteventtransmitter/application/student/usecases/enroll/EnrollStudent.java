@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentEventDispatcher;
@@ -65,6 +66,7 @@ public class EnrollStudent {
                 .toList();
     }
 
+    @Transactional
     public OutputEnrollStudent execute(InputEnrollStudent input) {
         var disciplines = findAllDisciplinesRequestedByStudent(input.disciplineCodes);
         var course = findCourseRequestedByStudent(input.course);
