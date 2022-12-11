@@ -96,14 +96,14 @@ public class EnrollStudent {
         var studentWithNewDisciplines = new StudentBuilder(
                 student.id(),
                 student.name(),
-                student.ra().toString(),
+                student.ra().value(),
                 student.shift())
                 .withCp(student.cp().value())
                 .withCr(student.cr().value())
                 .withCourse(student.course())
                 .withDisciplines(disciplines).build();
 
-        studentRepository.update(student);
+        studentRepository.update(studentWithNewDisciplines);
         for (IDiscipline discipline : disciplinesToGetOut) {
             calculateCoefficientsOfDiscipline.execute(discipline);
             disciplineRepository.update(discipline);
