@@ -8,9 +8,11 @@ public class InputCreateStudent {
     public float cp;
     public char shift;
 
-    public InputCreateStudent(){}
+    public InputCreateStudent() {
 
-    public InputCreateStudent(String name, String ra, String course, float cr, float cp, char shift){
+    }
+
+    public InputCreateStudent(String name, String ra, String course, float cr, float cp, char shift) {
         this.name = name;
         this.ra = ra;
         this.course = course;

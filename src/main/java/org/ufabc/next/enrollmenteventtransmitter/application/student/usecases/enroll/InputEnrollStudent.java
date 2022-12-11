@@ -3,13 +3,13 @@ package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.e
 import java.util.List;
 
 public class InputEnrollStudent {
-    public final String ra;
-    public final String name;
-    public final String course;
-    public final Float cr;
-    public final Float cp;
-    public final char shift;
-    public final List<String> disciplineCodes;
+    public String ra;
+    public String name;
+    public String course;
+    public Float cr;
+    public Float cp;
+    public char shift;
+    public List<String> disciplineCodes;
 
     public InputEnrollStudent(String ra, String name, String course, Float cr, Float cp, char shift, List<String> disciplineCodes){
         this.ra = ra;
@@ -19,5 +19,9 @@ public class InputEnrollStudent {
         this.cp = cp;
         this.shift = shift;
         this.disciplineCodes = disciplineCodes;
+    }
+
+    public InputEnrollStudent() {
+
     }
 }
