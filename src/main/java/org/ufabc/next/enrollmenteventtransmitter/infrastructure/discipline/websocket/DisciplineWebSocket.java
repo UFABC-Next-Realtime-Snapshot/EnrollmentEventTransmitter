@@ -48,11 +48,12 @@ public class DisciplineWebSocket {
         sessions.put(code, requesterSession);
 
         var discipline = disciplineService.findByCode(code);
-        session.getAsyncRemote().sendObject(gson.toJson(discipline.get()), sendResult -> {
-            if (sendResult.getException() != null) {
-                LOGGER.error(sendResult.getException().getMessage());
-            }
-        });
+        session.getAsyncRemote().sendObject(gson.toJson(DisciplineResponse.from(discipline.get())),
+                sendResult -> {
+                    if (sendResult.getException() != null) {
+                        LOGGER.error(sendResult.getException().getMessage());
+                    }
+                });
     }
 
     @OnMessage
@@ -62,7 +63,7 @@ public class DisciplineWebSocket {
         }
 
         var discipline = disciplineService.findByCode(code);
-        discipline.ifPresent(iDiscipline -> broadcast(gson.toJson(iDiscipline), code));
+        discipline.ifPresent(iDiscipline -> broadcast(gson.toJson(DisciplineResponse.from(iDiscipline)), code));
     }
 
     private void broadcast(String message, String code) {
