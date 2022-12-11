@@ -23,11 +23,12 @@ public class ProfessorEntity extends PanacheEntityBase {
 
     public static ProfessorEntity toEntity(Professor professor) {
         var professorEntity = new ProfessorEntity();
+        professorEntity.id = professor.id();
         professorEntity.name = professor.name();
         return professorEntity;
     }
 
     public static Professor toModel(ProfessorEntity professor) {
-        return new Professor(professor.name);
+        return new Professor(professor.id, professor.name);
     }
 }

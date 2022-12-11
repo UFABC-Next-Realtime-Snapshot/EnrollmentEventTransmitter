@@ -61,7 +61,7 @@ public class Student implements IStudent {
 
     @Override
     public boolean reservation(Course course) {
-        return this.course.equals(course);
+        return this.course.name().equals(course.name());
     }
 
     @Override

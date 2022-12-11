@@ -1,16 +1,15 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.commons.events;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 @SuppressWarnings("unchecked")
-public class EventDispatcher implements IEventDispatcher {
-    private final Map<String, List<IEventHandler<IEvent>>> handlers;
-
-    public EventDispatcher() {
-        this.handlers = new HashMap<>();
-    }
+public abstract class EventDispatcher implements IEventDispatcher {
+    private final Map<String, List<IEventHandler<IEvent>>> handlers = new HashMap<>();
 
     @Override
     public void notify(IEvent event) {
@@ -38,7 +37,7 @@ public class EventDispatcher implements IEventDispatcher {
     public <T extends IEvent> void unsubscribe(Class<T> event, IEventHandler<T> handler) {
         final String eventName = event.getName();
         List<IEventHandler<IEvent>> handlersOfEvent = this.handlers.get(eventName);
-        if(handlersOfEvent != null){
+        if (handlersOfEvent != null) {
             handlersOfEvent.remove((IEventHandler<IEvent>) handler);
         }
     }

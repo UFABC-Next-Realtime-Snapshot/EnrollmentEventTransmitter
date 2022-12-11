@@ -36,7 +36,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: shift
-                  type: VARCHAR(1)
+                  type: CHAR(1)
                   constraints:
                     nullable: false
               - column:
@@ -137,12 +137,17 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: shift
-                  type: VARCHAR(1)
+                  type: CHAR(1)
                   constraints:
                     nullable: false
               - column:
                   name: vacancies
-                  type: int
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subscribers
+                  type: SMALLINT
                   constraints:
                     nullable: false
               - column:
@@ -245,3 +250,12 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: disciplines
             validate: true
+  - changeSet:
+      id: 2
+      author: paixao.thales
+      changes:
+        - sql:
+            dbms: all
+            endDelimiter: \nGO
+            splitStatements: false
+            sql: INSERT INTO courses (name) VALUES ('BCT'), ('BCH'), ('BCC'), ('EAU'), ('AERO'), ('EBM'), ('EE'), ('BM'), ('EG')

@@ -5,6 +5,8 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 
+import java.util.Objects;
+
 import static org.ufabc.next.enrollmenteventtransmitter.domain.commons.PreConditions.checkNotNull;
 
 public class Discipline implements IDiscipline {
@@ -15,6 +17,7 @@ public class Discipline implements IDiscipline {
     private Professor theoryProfessor;
     private Professor practiceProfessor;
     private short vacancies;
+    private short subscribers;
     private Shift shift;
     private Cr thresholdCr;
     private Cp thresholdCp;
@@ -62,6 +65,11 @@ public class Discipline implements IDiscipline {
     }
 
     @Override
+    public short subscribers() {
+        return this.subscribers;
+    }
+
+    @Override
     public Shift shift() {
         return this.shift;
     }
@@ -76,6 +84,30 @@ public class Discipline implements IDiscipline {
         return this.thresholdCp;
     }
 
+    @Override
+    public boolean isFull() {
+        return this.subscribers == this.vacancies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Discipline that = (Discipline) o;
+        return vacancies == that.vacancies && subscribers == that.subscribers &&
+                Objects.equals(id, that.id) && Objects.equals(code, that.code) &&
+                Objects.equals(name, that.name) && Objects.equals(course, that.course) &&
+                Objects.equals(theoryProfessor, that.theoryProfessor) &&
+                Objects.equals(practiceProfessor, that.practiceProfessor) &&
+                shift == that.shift && Objects.equals(thresholdCr, that.thresholdCr) &&
+                Objects.equals(thresholdCp, that.thresholdCp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, name, course, theoryProfessor, practiceProfessor, vacancies, subscribers, shift, thresholdCr, thresholdCp);
+    }
+
     public static final class Builder {
         private Long id;
         private String code;
@@ -84,6 +116,7 @@ public class Discipline implements IDiscipline {
         private Professor theoryProfessor;
         private Professor practiceProfessor;
         private short vacancies;
+        private short subscribers;
         private Shift shift;
         private Cr thresholdCr;
         private Cp thresholdCp;
@@ -126,6 +159,11 @@ public class Discipline implements IDiscipline {
             return this;
         }
 
+        public Builder withSubscribers(short subscribers) {
+            this.subscribers = subscribers;
+            return this;
+        }
+
         public Builder withShift(Shift shift) {
             this.shift = shift;
             return this;
@@ -143,13 +181,14 @@ public class Discipline implements IDiscipline {
 
         public Discipline build() {
             Discipline discipline = new Discipline();
-            discipline.id = checkNotNull(this.id, "id");
+            discipline.id = this.id;
             discipline.code = checkNotNull(this.code, "code");
             discipline.name = checkNotNull(this.name, "name");
             discipline.course = checkNotNull(this.course, "course");
             discipline.theoryProfessor = this.theoryProfessor;
             discipline.practiceProfessor = this.practiceProfessor;
             discipline.vacancies = this.vacancies;
+            discipline.subscribers = subscribers;
             discipline.shift = checkNotNull(this.shift, "shift");
             discipline.thresholdCr = thresholdCr != null ? thresholdCr : new Cr();
             discipline.thresholdCp = thresholdCp != null ? thresholdCp : new Cp();

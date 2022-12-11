@@ -1,41 +1,44 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.update;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.course.CourseRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.discipline.DisciplineRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
-import org.ufabc.next.enrollmenteventtransmitter.infrastructure.commons.repository.CourseEntity;
 
-@RequestScoped
+@ApplicationScoped
 public class UpdateStudent {
 
     private final StudentRepository studentRepository;
     private final DisciplineRepository disciplineRepository;
+    private final CourseRepository courseRepository;
     private final CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline;
 
     public UpdateStudent(StudentRepository studentRepository,
             DisciplineRepository disciplineRepository,
+            CourseRepository courseRepository,
             CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline) {
         this.studentRepository = studentRepository;
         this.disciplineRepository = disciplineRepository;
+        this.courseRepository = courseRepository;
         this.calculateCoefficientsOfDiscipline = calculateCoefficientsOfDiscipline;
     }
 
     public OutputUpdateStudent execute(InputUpdateStudent input) {
         var optionalStudent = studentRepository.findByRa(input.ra);
         if (optionalStudent.isEmpty()) {
-            throw new RuntimeException("Deu ruim");
+            throw new RuntimeException("student " + input.ra + " not exists");
         }
 
-        var optionalCourse = CourseEntity.find("name like ?1", input.course.strip()).firstResultOptional();
+        var optionalCourse = courseRepository.findByName(input.course);
         if (optionalCourse.isEmpty()) {
-            throw new RuntimeException("Deu ruim");
+            throw new RuntimeException("course " + input.course + " not exists");
         }
 
-        var course = CourseEntity.toModel((CourseEntity) optionalCourse.get());
+        var course = optionalCourse.get();
         var student = optionalStudent.get();
         var shift = Shift.fromInitial(input.shift);
         student = new StudentBuilder(student.id(), student.name(), student.ra().toString(), shift)

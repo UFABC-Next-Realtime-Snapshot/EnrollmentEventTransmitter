@@ -15,7 +15,7 @@ public class StudentBuilder {
     private float cr = 0;
     private float cp = 0;
     private Course course;
-    private List<IDiscipline> disciplines;
+    private List<IDiscipline> disciplines = List.of();
 
     public StudentBuilder(Long id, String name, String ra, Shift shift) {
         this.id = id;

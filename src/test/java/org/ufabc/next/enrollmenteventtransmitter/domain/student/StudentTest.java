@@ -98,4 +98,18 @@ public class StudentTest {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    @Test
+    public void whenCourseIsSameOfStudentMustReturnTrue() {
+        var student = new Student(id, name, ra, validCrValue, validCpValue, course, Shift.MORNING, List.of());
+
+        assertTrue(student.reservation(course));
+    }
+
+    @Test
+    public void whenCourseIsNotSameOfStudentMustReturnFalse() {
+        var student = new Student(id, name, ra, validCrValue, validCpValue, course, Shift.MORNING, List.of());
+
+        assertFalse(student.reservation(new Course(null, "differentCourse")));
+    }
 }

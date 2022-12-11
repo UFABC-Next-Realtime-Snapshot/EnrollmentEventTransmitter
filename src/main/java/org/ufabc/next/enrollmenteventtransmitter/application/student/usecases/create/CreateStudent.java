@@ -1,32 +1,48 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.create;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
+import org.jboss.logging.Logger;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
+import org.ufabc.next.enrollmenteventtransmitter.domain.course.CourseRepository;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
-@RequestScoped
+@ApplicationScoped
 public class CreateStudent {
-    private final StudentRepository studentRepository;
+    private static final Logger LOGGER = Logger.getLogger(CreateStudent.class);
 
-    public CreateStudent(StudentRepository studentRepository){
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
+
+    public CreateStudent(StudentRepository studentRepository, CourseRepository courseRepository) {
         this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
     }
 
-    public OutputCreateStudent execute(InputCreateStudent input){
+    @Transactional
+    public OutputCreateStudent execute(InputCreateStudent input) {
         var optionalStudent = studentRepository.findByRa(input.ra);
+        var optionalCourse = courseRepository.findByName(input.course);
 
-        if(optionalStudent.isPresent()){
-            throw new RuntimeException("Deu ruim");
+        if (optionalStudent.isPresent()) {
+            throw new ResourceNotFoundException("student already exists");
         }
 
+        if (optionalCourse.isEmpty()) {
+            throw new ResourceNotFoundException("course not found");
+        }
+
+        var course = optionalCourse.get();
         var student = new StudentBuilder(null, input.name, input.ra, Shift.fromInitial(input.shift))
-            .withCr(input.cr)
-            .withCp(input.cp)
-            .withCourse(null)
-            .build();
+                .withCr(input.cr)
+                .withCp(input.cp)
+                .withCourse(course)
+                .build();
         studentRepository.add(student);
+        LOGGER.info("student created");
         return new OutputCreateStudent();
     }
 }
