@@ -52,12 +52,14 @@ public class StudentResourceTest extends Cleanable {
         var discipline = DisciplineFixture.aDiscipline(course, practiceProfessor, theoryProfessor);
         var student = StudentFixture.aStudent(course, List.of(discipline));
 
+        String response = "[{\"code\":\"Some code\",\"course\":\"aCourse\",\"name\":\"Some discipline\",\"practiceProfessor\":\"aPracticeProfessorName\",\"shift\":\"M\",\"subscribers\":0,\"theoryProfessor\":\"aTheoryProfessorName\",\"thresholdCp\":1.0,\"thresholdCr\":3.4,\"vacancies\":10}]";
+
         given()
                 .when()
                 .get(String.format("/students/student/%s/disciplines", student.ra().value()))
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("[{\"code\":\"Some code\",\"course\":\"aCourse\",\"name\":\"Some discipline\",\"practiceProfessor\":\"aPracticeProfessorName\",\"shift\":\"MORNING\",\"subscribers\":0,\"theoryProfessor\":\"aTheoryProfessorName\",\"thresholdCp\":{},\"thresholdCr\":{},\"vacancies\":10}]"));
+                .body(is(response));
     }
 
     @Test
