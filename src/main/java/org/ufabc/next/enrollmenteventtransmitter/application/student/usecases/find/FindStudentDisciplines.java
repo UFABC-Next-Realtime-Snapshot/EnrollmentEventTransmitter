@@ -35,8 +35,8 @@ public class FindStudentDisciplines {
                                 discipline.course().name(),
                                 discipline.theoryProfessor() == null ? null : discipline.theoryProfessor().name(),
                                 discipline.practiceProfessor() == null ? null : discipline.practiceProfessor().name(),
-                                discipline.vacancies(), discipline.subscribers(), discipline.shift(),
-                                discipline.thresholdCr(), discipline.thresholdCp()))
+                                discipline.vacancies(), discipline.subscribers(), discipline.shift().initial(),
+                                discipline.thresholdCr().value(), discipline.thresholdCp().value()))
                 .toList();
     }
 }
