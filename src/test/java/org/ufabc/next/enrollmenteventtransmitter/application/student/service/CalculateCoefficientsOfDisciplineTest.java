@@ -80,7 +80,7 @@ public class CalculateCoefficientsOfDisciplineTest extends Cleanable {
                 .setParameter("cr", 0F)
                 .setParameter("cp", 0F)
                 .setParameter("vacancies", 3)
-                .setParameter("subscribers", 3)
+                .setParameter("subscribers", 4)
                 .setParameter("theory_professor_id", 1L)
                 .setParameter("practice_professor_id", 2L)
                 .executeUpdate();
@@ -93,7 +93,7 @@ public class CalculateCoefficientsOfDisciplineTest extends Cleanable {
                 .withCR(new Cr(0))
                 .withCP(new Cp(0))
                 .withVacancies((short) 3)
-                .withSubscribers((short) 3)
+                .withSubscribers((short) 4)
                 .withTheoryProfessor(new Professor("Some"))
                 .withPracticeProfessor(new Professor("Other"))
                 .build();

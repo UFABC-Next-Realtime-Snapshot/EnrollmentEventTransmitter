@@ -11,6 +11,7 @@ import org.ufabc.next.enrollmenteventtransmitter.application.student.events.Stud
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRegisteredInDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRemovedFromDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.Course;
 import org.ufabc.next.enrollmenteventtransmitter.domain.course.CourseRepository;
@@ -43,26 +44,34 @@ public class EnrollStudent {
         this.dispatcher = dispatcher;
     }
 
-    private List<IDiscipline> findAllDisciplinesRequestedByStudent(List<String> codes) throws RuntimeException {
+    private List<IDiscipline> findAllDisciplinesRequestedByStudent(List<String> codes) {
         var disciplines = new ArrayList<IDiscipline>();
         for (String code : codes) {
             var optionalDiscipline = disciplineRepository.findByCode(code);
-            if (optionalDiscipline.isEmpty())
-                throw new RuntimeException("discipline code: " + code + " not exists");
+            if (optionalDiscipline.isEmpty()) {
+                throw new ResourceNotFoundException(String.format("discipline code %s not exists", code));
+            }
             disciplines.add(optionalDiscipline.get());
         }
         return disciplines;
     }
 
-    private Course findCourseRequestedByStudent(String name) throws RuntimeException {
+    private Course findCourseRequestedByStudent(String name) {
         var optionalCourse = courseRepository.findByName(name);
-        if (optionalCourse.isEmpty())
-            throw new RuntimeException("course: " + name + " not exists");
+        if (optionalCourse.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("course %s not exists", name));
+        }
         return optionalCourse.get();
     }
 
     private List<IDiscipline> disciplinesToGetOut(IStudent student, List<IDiscipline> disciplinesForEnrollment) {
-        return student.disciplines().stream().filter(discipline -> !disciplinesForEnrollment.contains(discipline))
+        List<String> disciplinesCodesForEnrollment = disciplinesForEnrollment
+                .stream()
+                .map(discipline -> discipline.code().toLowerCase())
+                .toList();
+        return student.disciplines()
+                .stream()
+                .filter(discipline -> !disciplinesCodesForEnrollment.contains(discipline.code().toLowerCase()))
                 .toList();
     }
 
@@ -97,11 +106,12 @@ public class EnrollStudent {
                 student.id(),
                 student.name(),
                 student.ra().value(),
-                student.shift())
-                .withCp(student.cp().value())
-                .withCr(student.cr().value())
-                .withCourse(student.course())
-                .withDisciplines(disciplines).build();
+                Shift.fromInitial(input.shift))
+                .withCp(input.cp)
+                .withCr(input.cr)
+                .withCourse(course)
+                .withDisciplines(disciplines)
+                .build();
 
         studentRepository.update(studentWithNewDisciplines);
         for (IDiscipline discipline : disciplinesToGetOut) {

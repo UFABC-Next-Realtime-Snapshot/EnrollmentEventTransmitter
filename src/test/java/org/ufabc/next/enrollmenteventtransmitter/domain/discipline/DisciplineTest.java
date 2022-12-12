@@ -26,6 +26,7 @@ public class DisciplineTest {
                 .withPracticeProfessor(new Professor("aPracticeProfessorPName"))
                 .withTheoryProfessor(new Professor("aTheoryProfessorName"))
                 .withVacancies((short) 10)
+                .withSubscribers((short) 20)
                 .build();
 
         assertEquals("aCode", discipline.code());
@@ -37,6 +38,7 @@ public class DisciplineTest {
         assertEquals(new Professor("aPracticeProfessorPName"), discipline.practiceProfessor());
         assertEquals(new Professor("aTheoryProfessorName"), discipline.theoryProfessor());
         assertEquals(10, discipline.vacancies());
+        assertEquals(20, discipline.subscribers());
     }
 
     @Test
@@ -121,5 +123,59 @@ public class DisciplineTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void whenHasMoreSubscribersThanVacanciesMustReturnTrue() {
+        var discipline = Discipline.aDiscipline()
+                .withId(1L)
+                .withCode("aCode")
+                .withCourse(course)
+                .withName("aName")
+                .withShift(Shift.MORNING)
+                .withCR(new Cr(3))
+                .withPracticeProfessor(new Professor("aPracticeProfessorPName"))
+                .withTheoryProfessor(new Professor("aTheoryProfessorName"))
+                .withVacancies((short) 10)
+                .withSubscribers((short) 12)
+                .build();
+
+        assertTrue(discipline.isFull());
+    }
+
+    @Test
+    public void whenHasLessSubscribersThanVacanciesMustReturnFalse() {
+        var discipline = Discipline.aDiscipline()
+                .withId(1L)
+                .withCode("aCode")
+                .withCourse(course)
+                .withName("aName")
+                .withShift(Shift.MORNING)
+                .withCR(new Cr(3))
+                .withPracticeProfessor(new Professor("aPracticeProfessorPName"))
+                .withTheoryProfessor(new Professor("aTheoryProfessorName"))
+                .withVacancies((short) 10)
+                .withSubscribers((short) 8)
+                .build();
+
+        assertFalse(discipline.isFull());
+    }
+
+    @Test
+    public void whenSubscribersIsEqualsToVacanciesMustReturnFalse() {
+        var discipline = Discipline.aDiscipline()
+                .withId(1L)
+                .withCode("aCode")
+                .withCourse(course)
+                .withName("aName")
+                .withShift(Shift.MORNING)
+                .withCR(new Cr(3))
+                .withPracticeProfessor(new Professor("aPracticeProfessorPName"))
+                .withTheoryProfessor(new Professor("aTheoryProfessorName"))
+                .withVacancies((short) 10)
+                .withSubscribers((short) 10)
+                .build();
+
+        assertFalse(discipline.isFull());
     }
 }

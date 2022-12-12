@@ -8,6 +8,7 @@ import org.ufabc.next.enrollmenteventtransmitter.application.student.events.Stud
 import org.ufabc.next.enrollmenteventtransmitter.application.student.services.CalculateCoefficientsOfDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.enroll.EnrollStudent;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.enroll.InputEnrollStudent;
+import org.ufabc.next.enrollmenteventtransmitter.domain.commons.exceptions.ResourceNotFoundException;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cp;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Cr;
 import org.ufabc.next.enrollmenteventtransmitter.domain.commons.valueObjects.Shift;
@@ -189,11 +190,10 @@ public class EnrollStudentTest {
         var input = new InputEnrollStudent("SomeRa...", "Some name", "Some course", 4F,
                 1F, Shift.MORNING.initial(), List.of("Some code"));
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            enrollStudent.execute(input);
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class,
+                () -> enrollStudent.execute(input));
 
-        assertEquals("discipline code: Some code not exists", exception.getMessage());
+        assertEquals("discipline code Some code not exists", exception.getMessage());
     }
 
     @Test
@@ -202,10 +202,9 @@ public class EnrollStudentTest {
         var input = new InputEnrollStudent("SomeRa...", "Some name", "Some course", 4F,
                 1F, Shift.MORNING.initial(), new ArrayList<>());
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            enrollStudent.execute(input);
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class,
+                () -> enrollStudent.execute(input));
 
-        assertEquals("course: Some course not exists", exception.getMessage());
+        assertEquals("course Some course not exists", exception.getMessage());
     }
 }

@@ -86,7 +86,7 @@ public class Discipline implements IDiscipline {
 
     @Override
     public boolean isFull() {
-        return this.subscribers == this.vacancies;
+        return this.subscribers > this.vacancies;
     }
 
     @Override
