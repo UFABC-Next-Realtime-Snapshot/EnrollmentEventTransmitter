@@ -85,7 +85,7 @@ public class EnrollStudentTest {
         verify(courseRepository).findByName("Some course");
         verify(dispatcher).notify(new StudentRegisteredInDiscipline(discipline, any()));
         verify(calculateCoefficientsOfDiscipline).execute(discipline);
-        verify(disciplineRepository).update(discipline);
+        verify(disciplineRepository, times(2)).update(discipline);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class EnrollStudentTest {
         verify(courseRepository).findByName("Some course");
         verify(dispatcher).notify(new StudentRegisteredInDiscipline(discipline, any()));
         verify(calculateCoefficientsOfDiscipline).execute(discipline);
-        verify(disciplineRepository).update(discipline);
+        verify(disciplineRepository, times(2)).update(discipline);
     }
 
     @Test
@@ -164,6 +164,7 @@ public class EnrollStudentTest {
         when(courseRepository.findByName("Some course")).thenReturn(Optional.of(course));
         when(studentRepository.findByRa("SomeRa...")).thenReturn(Optional.of(student));
         when(disciplineRepository.findByCode("Other code")).thenReturn(Optional.of(otherDiscipline));
+        when(disciplineRepository.findByCode("Some code")).thenReturn(Optional.of(discipline));
 
         var disciplineCodes = new ArrayList<String>();
         disciplineCodes.add("Other code");
@@ -174,13 +175,13 @@ public class EnrollStudentTest {
 
         verify(courseRepository).findByName("Some course");
         verify(studentRepository).update(any());
-        verify(disciplineRepository).findByCode("Other code");
+        verify(disciplineRepository, times(2)).findByCode("Other code");
         verify(dispatcher).notify(isA(StudentRegisteredInDiscipline.class));
         verify(dispatcher).notify(isA(StudentRemovedFromDiscipline.class));
         verify(calculateCoefficientsOfDiscipline).execute(discipline);
         verify(calculateCoefficientsOfDiscipline).execute(otherDiscipline);
-        verify(disciplineRepository).update(discipline);
-        verify(disciplineRepository).update(otherDiscipline);
+        verify(disciplineRepository, times(2)).update(discipline);
+        verify(disciplineRepository, times(2)).update(otherDiscipline);
     }
 
     @Test

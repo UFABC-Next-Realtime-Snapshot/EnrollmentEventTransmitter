@@ -1,12 +1,7 @@
 package org.ufabc.next.enrollmenteventtransmitter.application.student.usecases.enroll;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
-
 import org.jboss.logging.Logger;
+import org.ufabc.next.enrollmenteventtransmitter.application.commons.events.IEvent;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentEventDispatcher;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRegisteredInDiscipline;
 import org.ufabc.next.enrollmenteventtransmitter.application.student.events.StudentRemovedFromDiscipline;
@@ -21,15 +16,20 @@ import org.ufabc.next.enrollmenteventtransmitter.domain.student.IStudent;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentBuilder;
 import org.ufabc.next.enrollmenteventtransmitter.domain.student.StudentRepository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
 @ApplicationScoped
 public class EnrollStudent {
 
+    private static final Logger LOGGER = Logger.getLogger(EnrollStudent.class);
     private final DisciplineRepository disciplineRepository;
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final CalculateCoefficientsOfDiscipline calculateCoefficientsOfDiscipline;
     private final StudentEventDispatcher dispatcher;
-    private static final Logger LOGGER = Logger.getLogger(EnrollStudent.class);
 
     public EnrollStudent(
             DisciplineRepository disciplineRepository,
@@ -92,9 +92,8 @@ public class EnrollStudent {
             studentRepository.add(student);
             LOGGER.info("created student " + input.ra);
             for (IDiscipline discipline : student.disciplines()) {
-                calculateCoefficientsOfDiscipline.execute(discipline);
-                disciplineRepository.update(discipline);
-                dispatcher.notify(new StudentRegisteredInDiscipline(discipline, student));
+                evaluateDiscipline(discipline,
+                        new StudentRegisteredInDiscipline(discipline, student));
             }
             return new OutputEnrollStudent();
         }
@@ -115,16 +114,22 @@ public class EnrollStudent {
 
         studentRepository.update(studentWithNewDisciplines);
         for (IDiscipline discipline : disciplinesToGetOut) {
-            calculateCoefficientsOfDiscipline.execute(discipline);
-            disciplineRepository.update(discipline);
-            dispatcher.notify(new StudentRemovedFromDiscipline(discipline, studentWithNewDisciplines));
+            evaluateDiscipline(discipline,
+                    new StudentRemovedFromDiscipline(discipline, studentWithNewDisciplines));
         }
 
         for (IDiscipline discipline : studentWithNewDisciplines.disciplines()) {
-            calculateCoefficientsOfDiscipline.execute(discipline);
-            disciplineRepository.update(discipline);
-            dispatcher.notify(new StudentRegisteredInDiscipline(discipline, studentWithNewDisciplines));
+            evaluateDiscipline(discipline,
+                    new StudentRegisteredInDiscipline(discipline, studentWithNewDisciplines));
         }
         return new OutputEnrollStudent();
+    }
+
+    private void evaluateDiscipline(IDiscipline discipline, IEvent event) {
+        disciplineRepository.update(discipline);
+        var updatedDiscipline = disciplineRepository.findByCode(discipline.code()).get();
+        calculateCoefficientsOfDiscipline.execute(updatedDiscipline);
+        disciplineRepository.update(updatedDiscipline);
+        dispatcher.notify(event);
     }
 }
