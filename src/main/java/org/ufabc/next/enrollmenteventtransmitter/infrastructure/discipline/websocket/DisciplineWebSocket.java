@@ -48,12 +48,7 @@ public class DisciplineWebSocket {
         sessions.put(code, requesterSession);
 
         var discipline = disciplineService.findByCode(code);
-        session.getAsyncRemote().sendObject(gson.toJson(DisciplineResponse.from(discipline.get())),
-                sendResult -> {
-                    if (sendResult.getException() != null) {
-                        LOGGER.error(sendResult.getException().getMessage());
-                    }
-                });
+        discipline.ifPresent(iDiscipline -> broadcast(DisciplineResponse.from(iDiscipline), session));
     }
 
     @OnMessage
@@ -63,22 +58,24 @@ public class DisciplineWebSocket {
         }
 
         var discipline = disciplineService.findByCode(code);
-        discipline.ifPresent(iDiscipline -> broadcast(gson.toJson(DisciplineResponse.from(iDiscipline)), code));
+        discipline.ifPresent(iDiscipline -> broadcast(DisciplineResponse.from(iDiscipline), code));
     }
 
     public void addDisciplineInSession(String disciplineCode) {
         sessions.put(disciplineCode, new ArrayList<>());
     }
 
-    private void broadcast(String message, String code) {
+    private void broadcast(DisciplineResponse message, String code) {
         var requesterSession = sessions.get(code);
+        requesterSession.forEach(session -> broadcast(message, session));
+    }
 
-        requesterSession.forEach(session -> session
-                .getAsyncRemote()
-                .sendObject(message, sendResult -> {
+    private void broadcast(DisciplineResponse message, Session session) {
+        session.getAsyncRemote().sendObject(gson.toJson(message),
+                sendResult -> {
                     if (sendResult.getException() != null) {
                         LOGGER.error(sendResult.getException().getMessage());
                     }
-                }));
+                });
     }
 }
